@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Score de Risco — {{ periodo }}{% endblock %}
+{% block page_title %}Score de Risco · {{ periodo }}{% endblock %}
+{% block extra_head %}
+{% if chart_json %}<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>{% endif %}
+<style>
+.score-big { font-size:64px; font-weight:800; line-height:1; }
+.score-label { font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-top:8px; }
+.dim-card { background:var(--fa-surface-2); border:1px solid var(--fa-border); border-radius:10px; padding:14px 16px; }
+.dim-val { font-size:22px; font-weight:700; }
+.dim-bar { height:4px; border-radius:4px; background:rgba(255,255,255,.08); margin-top:8px; }
+.dim-bar-fill { height:100%; border-radius:4px; }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <!-- Score Geral -->
+    <div class="col-md-4">
+        <div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:14px; padding:32px; text-align:center; height:100%;">
+            {% if score %}
+            <div class="score-big" style="color:{{ score.get_cor_classificacao }};">{{ score.score_geral }}</div>
+            <div class="score-label" style="color:{{ score.get_cor_classificacao }};">{{ score.get_classificacao_display }}</div>
+            <div style="margin-top:20px; font-size:12px; color:var(--fa-text-muted);">Score de Risco Geral (0–10)</div>
+            {% else %}
+            <div style="font-size:36px; margin-bottom:12px;">⚠️</div>
+            <div style="font-size:14px; color:var(--fa-text-muted);">Score não calculado para este período.</div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- Radar Chart -->
+    <div class="col-md-8">
+        <div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:14px; padding:20px;">
+            {% if chart_json %}
+            <div id="radar-chart"></div>
+            {% else %}
+            <div style="text-align:center; padding:60px; color:var(--fa-text-muted);">Instale plotly: pip install plotly</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% if score %}
+<!-- Dimensões -->
+<div style="margin-top:24px; font-size:12px; font-weight:600; color:var(--fa-text-muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px;">Dimensões do Score</div>
+<div class="row g-3">
+    {% with dims=score %}
+    <div class="col-sm-6 col-lg-3"><div class="dim-card">
+        <div style="font-size:11px; color:var(--fa-text-muted);">Liquidez</div>
+        <div class="dim-val" style="color:#3b82f6;">{{ score.score_liquidez }}</div>
+        <div class="dim-bar"><div class="dim-bar-fill" style="width:{{ score.score_liquidez|floatformat:0 }}0%; background:#3b82f6;"></div></div>
+    </div></div>
+    <div class="col-sm-6 col-lg-3"><div class="dim-card">
+        <div style="font-size:11px; color:var(--fa-text-muted);">Rentabilidade</div>
+        <div class="dim-val" style="color:#8b5cf6;">{{ score.score_rentabilidade }}</div>
+        <div class="dim-bar"><div class="dim-bar-fill" style="width:{{ score.score_rentabilidade|floatformat:0 }}0%; background:#8b5cf6;"></div></div>
+    </div></div>
+    <div class="col-sm-6 col-lg-3"><div class="dim-card">
+        <div style="font-size:11px; color:var(--fa-text-muted);">Endividamento</div>
+        <div class="dim-val" style="color:#d29922;">{{ score.score_endividamento }}</div>
+        <div class="dim-bar"><div class="dim-bar-fill" style="width:{{ score.score_endividamento|floatformat:0 }}0%; background:#d29922;"></div></div>
+    </div></div>
+    <div class="col-sm-6 col-lg-3"><div class="dim-card">
+        <div style="font-size:11px; color:var(--fa-text-muted);">Operacional</div>
+        <div class="dim-val" style="color:#3fb950;">{{ score.score_operacional }}</div>
+        <div class="dim-bar"><div class="dim-bar-fill" style="width:{{ score.score_operacional|floatformat:0 }}0%; background:#3fb950;"></div></div>
+    </div></div>
+    {% endwith %}
+</div>
+<!-- Narrativa IA -->
+{% if score.narrativa_ia %}
+<div style="margin-top:24px; background:var(--fa-surface); border:1px solid rgba(59,130,246,.2); border-radius:12px; padding:20px;">
+    <div style="font-size:12px; font-weight:600; color:#3b82f6; margin-bottom:10px;">
+        <i class="bi bi-robot me-2"></i>Narrativa gerada por {{ score.modelo_ia_usado }}
+    </div>
+    <div style="font-size:14px; color:var(--fa-text); line-height:1.7; white-space:pre-wrap;">{{ score.narrativa_ia }}</div>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}
+{% block extra_js %}
+{% if chart_json %}
+<script>
+var fig = {{ chart_json|safe }};
+Plotly.newPlot('radar-chart', fig.data, fig.layout, {responsive:true, displayModeBar:false});
+</script>
+{% endif %}
+{% endblock %}

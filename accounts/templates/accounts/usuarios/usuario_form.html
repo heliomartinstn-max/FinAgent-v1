@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}{% if usuario %}Editar Usuário{% else %}Novo Usuário{% endif %}{% endblock %}
+{% block page_title %}{% if usuario %}Editar Usuário{% else %}Cadastrar Novo Usuário{% endif %}{% endblock %}
+
+{% block extra_head %}
+<style>
+.form-card { background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:14px; padding:32px; max-width:640px; }
+.field-label { font-size:11px; font-weight:600; color:var(--fa-text-muted); text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:7px; }
+.field-input { width:100%; padding:10px 14px; background:rgba(0,0,0,.2); border:1px solid var(--fa-border); border-radius:8px; color:var(--fa-text); font-size:14px; outline:none; transition:border-color .2s; font-family:'Inter',sans-serif; }
+.field-input:focus { border-color:var(--fa-primary); box-shadow:0 0 0 3px rgba(59,130,246,.1); }
+.field-input option { background:#161b22; }
+.field-group { margin-bottom:20px; }
+.field-hint { font-size:11px; color:var(--fa-text-muted); margin-top:5px; }
+.toggle-row { display:flex; align-items:center; gap:10px; }
+.toggle-switch { position:relative; width:40px; height:22px; }
+.toggle-switch input { opacity:0; width:0; height:0; }
+.toggle-slider { position:absolute; inset:0; cursor:pointer; background:#374151; border-radius:22px; transition:.3s; }
+.toggle-slider:before { content:''; position:absolute; height:16px; width:16px; left:3px; bottom:3px; background:white; border-radius:50%; transition:.3s; }
+.toggle-switch input:checked + .toggle-slider { background:#3b82f6; }
+.toggle-switch input:checked + .toggle-slider:before { transform:translateX(18px); }
+.section-divider { font-size:11px; font-weight:600; color:var(--fa-text-muted); text-transform:uppercase; letter-spacing:.06em; padding:16px 0 10px; border-top:1px solid var(--fa-border); margin-top:8px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-card">
+
+    <!-- Ícone + Título -->
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:24px;">
+        <div style="width:44px; height:44px; background:linear-gradient(135deg,#3b82f6,#8b5cf6); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; color:white;">
+            {% if usuario %}✏️{% else %}👤{% endif %}
+        </div>
+        <div>
+            <div style="font-size:16px; font-weight:700; color:var(--fa-text);">
+                {% if usuario %}Editar: {{ usuario.nome_completo|default:usuario.email }}{% else %}Novo Usuário{% endif %}
+            </div>
+            <div style="font-size:12px; color:var(--fa-text-muted);">
+                {% if usuario %}Atualize os dados do usuário abaixo.{% else %}Preencha os dados para criar um novo acesso ao FinAgent.{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" action="{% if usuario %}{% url 'accounts:usuario_edit' usuario.pk %}{% else %}{% url 'accounts:usuario_create' %}{% endif %}">
+        {% csrf_token %}
+
+        <!-- Dados Pessoais -->
+        <div class="field-group">
+            <label class="field-label" for="nome_completo">Nome Completo *</label>
+            <input type="text" id="nome_completo" name="nome_completo" class="field-input"
+                   placeholder="Ex: João da Silva" required
+                   value="{{ usuario.nome_completo|default:'' }}">
+        </div>
+
+        <div class="field-group">
+            <label class="field-label" for="email">E-mail de Acesso *</label>
+            <input type="email" id="email" name="email" class="field-input"
+                   placeholder="usuario@empresa.com.br" required
+                   value="{{ usuario.email|default:'' }}">
+            <div class="field-hint">Este e-mail será usado para login no sistema.</div>
+        </div>
+
+        <!-- Senha -->
+        <div class="section-divider">
+            {% if usuario %}Alterar Senha (deixe em branco para manter a atual){% else %}Senha de Acesso{% endif %}
+        </div>
+
+        <div class="row g-3">
+            <div class="col-sm-6">
+                <div class="field-group">
+                    <label class="field-label" for="password">{% if usuario %}Nova Senha{% else %}Senha *{% endif %}</label>
+                    <input type="password" id="password" name="password" class="field-input"
+                           placeholder="Mínimo 8 caracteres"
+                           {% if not usuario %}required{% endif %}>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="field-group">
+                    <label class="field-label" for="password2">Confirmar Senha</label>
+                    <input type="password" id="password2" name="password2" class="field-input"
+                           placeholder="Repita a senha"
+                           {% if not usuario %}required{% endif %}>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nível de Acesso -->
+        <div class="section-divider">Permissões</div>
+
+        <div class="field-group">
+            <label class="field-label" for="nivel_acesso">Nível de Acesso *</label>
+            <select id="nivel_acesso" name="nivel_acesso" class="field-input" required>
+                <option value="">— Selecione o nível —</option>
+                {% for n in niveis %}
+                <option value="{{ n.pk }}"
+                    {% if usuario and usuario.nivel_acesso and usuario.nivel_acesso.pk == n.pk %}selected{% endif %}>
+                    {{ n.get_nome_display }} — {{ n.descricao|default:n.nome }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label" style="margin-bottom:10px;">Acesso Admin (Django)</label>
+            <div class="toggle-row">
+                <label class="toggle-switch">
+                    <input type="checkbox" name="is_staff" id="is_staff"
+                           {% if usuario and usuario.is_staff %}checked{% endif %}>
+                    <span class="toggle-slider"></span>
+                </label>
+                <div>
+                    <div style="font-size:13px; color:var(--fa-text);">Acesso ao painel /admin/</div>
+                    <div class="field-hint">Permite acesso ao Django Admin e às rotas restritas.</div>
+                </div>
+            </div>
+        </div>
+
+        {% if usuario %}
+        <div class="field-group">
+            <label class="field-label" style="margin-bottom:10px;">Status da Conta</label>
+            <div class="toggle-row">
+                <label class="toggle-switch">
+                    <input type="checkbox" name="is_active" id="is_active"
+                           {% if usuario.is_active %}checked{% endif %}>
+                    <span class="toggle-slider" style="{% if usuario.is_active %}background:#3fb950;{% endif %}"></span>
+                </label>
+                <div id="status-label" style="font-size:13px; color:var(--fa-text);">
+                    {% if usuario.is_active %}Conta Ativa{% else %}Conta Inativa{% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Botões -->
+        <div class="d-flex gap-2 mt-4 flex-wrap">
+            <button type="submit" class="btn btn-primary"
+                    style="border-radius:8px; font-size:13px; font-weight:600; padding:10px 22px;">
+                <i class="bi bi-check-circle me-2"></i>
+                {% if usuario %}Salvar Alterações{% else %}Criar Usuário{% endif %}
+            </button>
+            <a href="{% url 'accounts:usuarios' %}"
+               style="background:var(--fa-surface-2); border:1px solid var(--fa-border); color:var(--fa-text-muted); border-radius:8px; font-size:13px; font-weight:600; padding:10px 20px; text-decoration:none; display:inline-flex; align-items:center;">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Toggle label status
+const statusChk = document.getElementById('is_active');
+const statusLbl = document.getElementById('status-label');
+if (statusChk && statusLbl) {
+    statusChk.addEventListener('change', () => {
+        statusLbl.textContent = statusChk.checked ? 'Conta Ativa' : 'Conta Inativa';
+    });
+}
+</script>
+{% endblock %}

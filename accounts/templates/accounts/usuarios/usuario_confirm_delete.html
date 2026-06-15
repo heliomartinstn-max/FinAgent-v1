@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Excluir Usuário{% endblock %}
+{% block page_title %}Confirmar Exclusão{% endblock %}
+
+{% block content %}
+<div style="max-width:520px;">
+    <div style="background:var(--fa-surface); border:1px solid rgba(248,81,73,.3); border-radius:14px; padding:32px;">
+
+        <!-- Ícone de alerta -->
+        <div style="width:52px; height:52px; background:rgba(248,81,73,.12); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:20px;">
+            ⚠️
+        </div>
+
+        <h2 style="font-size:17px; font-weight:700; color:var(--fa-text); margin-bottom:8px;">
+            Excluir usuário permanentemente?
+        </h2>
+        <p style="font-size:13px; color:var(--fa-text-muted); line-height:1.6; margin-bottom:24px;">
+            Você está prestes a excluir o usuário abaixo. Esta ação <strong style="color:#f85149;">não pode ser desfeita</strong>.
+            Todo o histórico de chat e ações do usuário permanecerá no banco de dados.
+        </p>
+
+        <!-- Card do usuário -->
+        <div style="background:rgba(248,81,73,.06); border:1px solid rgba(248,81,73,.2); border-radius:10px; padding:14px 18px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+            <div style="width:36px; height:36px; background:linear-gradient(135deg,#3b82f6,#8b5cf6); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:15px; font-weight:700; flex-shrink:0;">
+                {{ usuario.nome_completo|first|upper|default:usuario.email|first|upper }}
+            </div>
+            <div>
+                <div style="font-size:14px; font-weight:600; color:var(--fa-text);">{{ usuario.nome_completo|default:"Sem nome" }}</div>
+                <div style="font-size:12px; color:var(--fa-text-muted); font-family:monospace;">{{ usuario.email }}</div>
+                {% if usuario.nivel_acesso %}
+                <div style="font-size:10px; color:var(--fa-text-muted); margin-top:2px;">{{ usuario.nivel_acesso.get_nome_display }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="d-flex gap-2">
+            <form method="POST" action="{% url 'accounts:usuario_delete' usuario.pk %}">
+                {% csrf_token %}
+                <button type="submit" id="btn-confirmar-exclusao"
+                        style="background:#f85149; color:white; border:none; border-radius:8px; font-size:13px; font-weight:600; padding:10px 20px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                    <i class="bi bi-trash3-fill"></i> Sim, excluir usuário
+                </button>
+            </form>
+            <a href="{% url 'accounts:usuarios' %}"
+               style="background:var(--fa-surface-2); border:1px solid var(--fa-border); color:var(--fa-text-muted); border-radius:8px; font-size:13px; font-weight:600; padding:10px 20px; text-decoration:none; display:inline-flex; align-items:center;">
+                Cancelar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

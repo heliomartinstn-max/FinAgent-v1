@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}DRE — {{ periodo }}{% endblock %}
+{% block page_title %}DRE Gerencial · {{ periodo }}{% endblock %}
+{% block extra_head %}
+{% if chart_json %}<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>{% endif %}
+{% endblock %}
+{% block content %}
+{% if chart_json %}
+<div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:12px; padding:20px; margin-bottom:24px;">
+    <div id="dre-chart"></div>
+</div>
+{% endif %}
+<div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:12px; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr style="border-bottom:1px solid var(--fa-border);">
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:left;">Descrição</th>
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:right;">Valor (R$)</th>
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:right;">AV (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for l in linhas %}
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04); {% if l.is_subtotal %}background:rgba(59,130,246,.06);{% endif %}">
+                <td style="padding:10px 16px; font-size:{% if l.is_subtotal %}14px{% else %}13px{% endif %}; font-weight:{% if l.is_subtotal %}700{% else %}400{% endif %}; color:var(--fa-text); padding-left:{% if not l.is_subtotal %}28px{% else %}16px{% endif %};">
+                    {{ l.descricao }}
+                </td>
+                <td style="padding:10px 16px; font-size:13px; font-weight:{% if l.is_subtotal %}700{% else %}400{% endif %}; color:{% if l.valor >= 0 %}#3fb950{% else %}#f85149{% endif %}; text-align:right;">
+                    R$ {{ l.valor|floatformat:2 }}
+                </td>
+                <td style="padding:10px 16px; font-size:12px; color:var(--fa-text-muted); text-align:right;">
+                    {{ l.percentual_av|floatformat:2 }}%
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" style="padding:48px; text-align:center; color:var(--fa-text-muted);">DRE ainda não gerada para este período.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+{% block extra_js %}
+{% if chart_json %}
+<script>
+var fig = {{ chart_json|safe }};
+Plotly.newPlot('dre-chart', fig.data, fig.layout, {responsive: true, displayModeBar: false});
+</script>
+{% endif %}
+{% endblock %}

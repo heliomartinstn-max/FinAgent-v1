@@ -1,0 +1,424 @@
+﻿python : Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
+No linha:1 caractere:1
++ python -c "
++ ~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Could not get F...sed as 4 floats:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+--- PAGINA 1 ---
+FinAgent
+Plano de Implanta├º├úo T├®cnica ÔÇö Stack Django
+Requisitos ÔÇó Infraestrutura ÔÇó Arquitetura ÔÇó Cronograma ÔÇó Deploy
+Do desenvolvimento local ao deploy em produ├º├úo via VPS
+UFG ÔÇö Especializa├º├úo em Sistemas e Agentes Inteligentes
+Abril 2026 ÔÇö Vers├úo 2.0 (Django)
+
+--- PAGINA 2 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+1. Por Que Django para o FinAgent
+A disciplina de Agentes Inteligentes da UFG utiliza Django como framework web. Al├®m de
+atender ao requisito acad├¬mico, Django traz vantagens concretas para o projeto:
+ÔÇó ORM nativo robusto: models.py define as tabelas e Django cuida de migrations,
+queries e relacionamentos. Ideal para o modelo de dados cont├íbil hierarqu├¡zado.
+ÔÇó Admin Panel gratuito: registrando os models no admin.py, voc├¬ ganha uma
+interface completa para visualizar, filtrar e editar balancetes, indicadores e scores
+sem escrever uma linha de frontend.
+ÔÇó Autentica├º├úo pronta: login, logout, permiss├Áes ÔÇö tudo nativo. Importante se a
+banca perguntar sobre seguran├ºa.
+ÔÇó Arquitetura MTV escal├ível: Model-Template-View separa bem as
+responsabilidades e facilita a organiza├º├úo dos agentes.
+ÔÇó Ecossistema maduro: Django REST Framework se precisar de API, Celery para
+tarefas em background, django-plotly-dash para dashboards.
+ÔÇó Alinhamento acad├¬mico: demonstra dom├¡nio do framework usado na disciplina.
+1.1 Compara├º├úo com Streamlit
+Crit├®rio Django Streamlit
+Requisito da disciplina Ô£à Sim ÔØî N├úo
+ÔØî Precisa de SQLAlchemy
+ORM / Banco de dados Ô£à Nativo (poderoso)
+separado
+Admin Panel Ô£à Gratuito e completo ÔØî N├úo existe
+Autentica├º├úo Ô£à Nativa ÔØî Precisa de lib externa
+Frontend flex├¡vel Ô£à Templates + JS livre ÔÜá Limitado aos widgets nativos
+Dashboards interativos ÔÜá Plotly via template (bom) Ô£à Nativo e r├ípido
+Velocidade de prototipa├º├úo ÔÜá M├®dia Ô£à Muito r├ípida
+Escalabilidade Ô£à Alta ÔØî Baixa
+Deploy profissional Ô£à Gunicorn + Nginx ÔÜá Streamlit Cloud (limitado)
+P├ígina 2
+
+--- PAGINA 3 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+2. Stack Tecnol├│gica Definitiva
+2.1 Backend
+Camada Tecnologia Vers├úo Justificativa
+Requisito da disciplina, ORM, admin,
+Framework Web Django 5.1+
+auth, MTV
+Ecossistema data science + Django
+Linguagem Python 3.11+
+nativo
+WSGI Server Gunicorn 22+ Servidor de produ├º├úo para Django
+Processamento em background dos
+Task Queue Celery + Redis 5.4+
+agentes (pipeline pesado)
+2.2+ /
+Processamento Pandas + NumPy Manipula├º├úo de DataFrames cont├íbeis
+1.26+
+Django Forms + Nativo / Valida├º├úo de upload + schemas dos
+Valida├º├úo
+Pydantic 2.7+ agentes
+2.2 Intelig├¬ncia Artificial
+Camada Tecnologia Uso
+Orquestra├º├úo de Pipeline multi-agente (ou orquestra├º├úo manual
+CrewAI
+Agentes com classes Python)
+LLM Principal Claude API (Sonnet) Risk Scorer (narrativas) + Chat Agent (NLP)
+LLM Leve Claude Haiku Classifica├º├úo de contas, tarefas simples
+ML / Forecast Prophet Proje├º├Áes de s├®ries temporais
+SDK anthropic (Python) Comunica├º├úo com a API Claude
+2.3 Banco de Dados
+Fase Tecnologia Justificativa
+Zero config, j├í vem no Django, perfeito para dev
+Desenvolvimento SQLite
+local
+Robusto, concorr├¬ncia, Django tem suporte nativo
+Produ├º├úo (VPS) PostgreSQL 16
+excelente
+Cache / Message
+Redis Cache de respostas da API + broker do Celery
+Broker
+2.4 Frontend (Django Templates)
+Componente Tecnologia Uso
+Django Templates HTML com l├│gica de renderiza├º├úo
+Templates
+(Jinja-like) server-side
+P├ígina 3
+
+--- PAGINA 4 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+Componente Tecnologia Uso
+Layout responsivo, componentes prontos
+CSS Framework Bootstrap 5 ou Tailwind CSS
+(cards, navbars, modais)
+Renderiza├º├úo client-side via JSON gerado
+Gr├íficos Interativos Plotly.js
+no Django
+Atualiza├º├úo parcial de p├ígina sem
+Interatividade HTMX (opcional)
+recarregar
+├ìcones Bootstrap Icons ou Lucide Iconografia para dashboards
+2.5 DevOps
+Componente Tecnologia Uso
+Controle de vers├úo Git + GitHub C├│digo versionado
+Container com Django + Gunicorn + Nginx +
+Deploy Docker + Docker Compose
+PostgreSQL + Redis
+Proxy Reverso Nginx Serve static files + proxy para Gunicorn
+SSL Certbot (LetÔÇÖs Encrypt) HTTPS gratuito
+Static Files WhiteNoise ou Nginx Servir CSS/JS/imagens em produ├º├úo
+P├ígina 4
+
+--- PAGINA 5 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+3. Estrutura do Projeto Django
+O projeto segue o padr├úo Django com apps modulares. Cada dom├¡nio funcional ├® uma app
+separada.
+finagent/
+Ôö£ÔöÇÔöÇ manage.py
+Ôö£ÔöÇÔöÇ finagent/ # Projeto Django (settings, urls, wsgi)
+Ôöé Ôö£ÔöÇÔöÇ __init__.py
+Ôöé Ôö£ÔöÇÔöÇ settings.py # Configura├º├Áes (DB, apps, middleware)
+Ôöé Ôö£ÔöÇÔöÇ urls.py # URLs raiz
+Ôöé Ôö£ÔöÇÔöÇ wsgi.py # Entry point WSGI (Gunicorn)
+Ôöé Ôö£ÔöÇÔöÇ asgi.py # Entry point ASGI (opcional)
+Ôöé ÔööÔöÇÔöÇ celery.py # Configura├º├úo do Celery
+Ôöé
+Ôö£ÔöÇÔöÇ core/ # App: infraestrutura compartilhada
+Ôöé Ôö£ÔöÇÔöÇ models.py # BaseModel com created_at, updated_at
+Ôöé Ôö£ÔöÇÔöÇ llm_client.py # Wrapper da API Claude
+Ôöé Ôö£ÔöÇÔöÇ utils.py # Fun├º├Áes utilit├írias
+Ôöé ÔööÔöÇÔöÇ templatetags/
+Ôöé ÔööÔöÇÔöÇ format_tags.py # Filtros (formatar moeda, %)
+Ôöé
+Ôö£ÔöÇÔöÇ empresas/ # App: cadastro de empresas
+Ôöé Ôö£ÔöÇÔöÇ models.py # Empresa
+Ôöé Ôö£ÔöÇÔöÇ admin.py
+Ôöé Ôö£ÔöÇÔöÇ views.py
+Ôöé Ôö£ÔöÇÔöÇ urls.py
+Ôöé ÔööÔöÇÔöÇ forms.py
+Ôöé
+Ôö£ÔöÇÔöÇ contabil/ # App: dados cont├íbeis
+Ôöé Ôö£ÔöÇÔöÇ models.py # Periodo, PlanoContas, Balancete
+Ôöé Ôö£ÔöÇÔöÇ admin.py # Admin com filtros por empresa/per├¡odo
+Ôöé Ôö£ÔöÇÔöÇ views.py # Upload, visualiza├º├úo do balancete
+Ôöé Ôö£ÔöÇÔöÇ urls.py
+Ôöé Ôö£ÔöÇÔöÇ forms.py # Form de upload de arquivo
+Ôöé ÔööÔöÇÔöÇ services/ # L├│gica de neg├│cio (fora das views)
+Ôöé ÔööÔöÇÔöÇ parser_service.py # L├│gica do Agente 1 (Parser)
+Ôöé
+Ôö£ÔöÇÔöÇ analises/ # App: DRE, an├ílises V&H, indicadores
+Ôöé Ôö£ÔöÇÔöÇ models.py # DRELinha, AnaliseVertical,
+AnaliseHorizontal, Indicador
+Ôöé Ôö£ÔöÇÔöÇ admin.py
+Ôöé Ôö£ÔöÇÔöÇ views.py # Views com gr├íficos Plotly
+Ôöé Ôö£ÔöÇÔöÇ urls.py
+Ôöé ÔööÔöÇÔöÇ services/
+Ôöé Ôö£ÔöÇÔöÇ dre_service.py # Agente 2 (DRE Builder)
+Ôöé Ôö£ÔöÇÔöÇ analyzer_service.py # Agente 3 (An├ílises V&H)
+Ôöé ÔööÔöÇÔöÇ kpi_service.py # Agente 4 (KPI Engine)
+Ôöé
+Ôö£ÔöÇÔöÇ risco/ # App: score de risco
+Ôöé Ôö£ÔöÇÔöÇ models.py # Score
+Ôöé Ôö£ÔöÇÔöÇ admin.py
+Ôöé Ôö£ÔöÇÔöÇ views.py # Dashboard de risco + radar chart
+Ôöé Ôö£ÔöÇÔöÇ urls.py
+Ôöé ÔööÔöÇÔöÇ services/
+Ôöé ÔööÔöÇÔöÇ risk_service.py # Agente 5 (Risk Scorer + Claude API)
+Ôöé
+P├ígina 5
+
+--- PAGINA 6 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+Ôö£ÔöÇÔöÇ forecast/ # App: proje├º├Áes ML
+Ôöé Ôö£ÔöÇÔöÇ models.py # Projecao
+Ôöé Ôö£ÔöÇÔöÇ views.py # Gr├íficos de forecast
+Ôöé Ôö£ÔöÇÔöÇ urls.py
+Ôöé ÔööÔöÇÔöÇ services/
+Ôöé ÔööÔöÇÔöÇ forecast_service.py # Agente 6 (Prophet)
+Ôöé
+Ôö£ÔöÇÔöÇ chat/ # App: chat NLP
+Ôöé Ôö£ÔöÇÔöÇ models.py # ChatHistorico
+Ôöé Ôö£ÔöÇÔöÇ views.py # Interface de chat (AJAX)
+Ôöé Ôö£ÔöÇÔöÇ urls.py
+Ôöé ÔööÔöÇÔöÇ services/
+Ôöé ÔööÔöÇÔöÇ chat_service.py # Agente 7 (Chat + Claude API)
+Ôöé
+Ôö£ÔöÇÔöÇ agents/ # Orquestra├º├úo dos agentes
+Ôöé Ôö£ÔöÇÔöÇ base_agent.py # Classe base abstrata
+Ôöé Ôö£ÔöÇÔöÇ orchestrator.py # Pipeline sequencial
+Ôöé ÔööÔöÇÔöÇ tasks.py # Celery tasks (processamento async)
+Ôöé
+Ôö£ÔöÇÔöÇ templates/ # Templates HTML
+Ôöé Ôö£ÔöÇÔöÇ base.html # Layout master (navbar, sidebar, footer)
+Ôöé Ôö£ÔöÇÔöÇ home.html # Home / Dashboard geral
+Ôöé Ôö£ÔöÇÔöÇ contabil/
+Ôöé Ôöé Ôö£ÔöÇÔöÇ upload.html # Upload de balancete
+Ôöé Ôöé ÔööÔöÇÔöÇ balancete_detail.html # Visualiza├º├úo do balancete
+Ôöé Ôö£ÔöÇÔöÇ analises/
+Ôöé Ôöé Ôö£ÔöÇÔöÇ dre.html # DRE Gerencial
+Ôöé Ôöé Ôö£ÔöÇÔöÇ vertical_horizontal.html # An├ílises V&H
+Ôöé Ôöé ÔööÔöÇÔöÇ indicadores.html # Dashboard de KPIs
+Ôöé Ôö£ÔöÇÔöÇ risco/
+Ôöé Ôöé ÔööÔöÇÔöÇ score.html # Score + radar + narrativa IA
+Ôöé Ôö£ÔöÇÔöÇ forecast/
+Ôöé Ôöé ÔööÔöÇÔöÇ projecoes.html # Gr├íficos de forecast
+Ôöé ÔööÔöÇÔöÇ chat/
+Ôöé ÔööÔöÇÔöÇ chat.html # Interface de chat
+Ôöé
+Ôö£ÔöÇÔöÇ static/ # Arquivos est├íticos
+Ôöé Ôö£ÔöÇÔöÇ css/
+Ôöé Ôöé ÔööÔöÇÔöÇ style.css # Estilos customizados
+Ôöé Ôö£ÔöÇÔöÇ js/
+Ôöé Ôöé Ôö£ÔöÇÔöÇ charts.js # Fun├º├Áes Plotly reutiliz├íveis
+Ôöé Ôöé ÔööÔöÇÔöÇ chat.js # L├│gica AJAX do chat
+Ôöé ÔööÔöÇÔöÇ img/
+Ôöé
+Ôö£ÔöÇÔöÇ data/ # Dados de exemplo
+Ôöé Ôö£ÔöÇÔöÇ sample_balancete.xlsx
+Ôöé ÔööÔöÇÔöÇ plano_contas_padrao.csv
+Ôöé
+Ôö£ÔöÇÔöÇ deploy/ # Configura├º├Áes de deploy
+Ôöé Ôö£ÔöÇÔöÇ Dockerfile
+Ôöé Ôö£ÔöÇÔöÇ docker-compose.yml
+Ôöé Ôö£ÔöÇÔöÇ nginx.conf
+Ôöé ÔööÔöÇÔöÇ entrypoint.sh
+Ôöé
+Ôö£ÔöÇÔöÇ tests/
+Ôö£ÔöÇÔöÇ .env.example
+Ôö£ÔöÇÔöÇ .gitignore
+P├ígina 6
+
+--- PAGINA 7 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+Ôö£ÔöÇÔöÇ requirements.txt
+ÔööÔöÇÔöÇ README.md
+P├ígina 7
+
+--- PAGINA 8 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+4. Modelos Django (Banco de Dados)
+Os modelos seguem o padr├úo Django e definem toda a arquitetura de dados. O ORM cuida
+das migrations automaticamente.
+4.1 core/models.py ÔÇö Base
+class BaseModel(models.Model):
+created_at = models.DateTimeField(auto_now_add=True)
+updated_at = models.DateTimeField(auto_now=True)
+class Meta:
+abstract = True
+4.2 empresas/models.py
+class Empresa(BaseModel):
+nome = models.CharField(max_length=200)
+cnpj = models.CharField(max_length=18, unique=True, blank=True, null=True)
+setor = models.CharField(max_length=100, blank=True)
+regime_tributario = models.CharField(max_length=50, blank=True)
+4.3 contabil/models.py
+class Periodo(BaseModel):
+empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+ano = models.IntegerField()
+mes = models.IntegerField(validators=[MinValue(1), MaxValue(12)])
+tipo = models.CharField(choices=[('mensal','Mensal'),('trim','Trimestral')])
+arquivo_origem = models.FileField(upload_to='balancetes/')
+status = models.CharField(default='pendente') # pendente/processado/erro
+class PlanoContas(BaseModel):
+empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+codigo = models.CharField(max_length=20)
+descricao = models.CharField(max_length=300)
+grupo = models.CharField() # ATIVO/PASSIVO/RECEITA/DESPESA/CUSTO
+subgrupo = models.CharField(blank=True)
+nivel = models.IntegerField()
+natureza = models.CharField(max_length=1) # D ou C
+tipo_conta = models.CharField(max_length=1) # S ou A
+class Balancete(BaseModel):
+periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE)
+conta = models.ForeignKey(PlanoContas, on_delete=models.CASCADE)
+saldo_anterior = models.DecimalField(max_digits=15, decimal_places=2)
+debito = models.DecimalField(max_digits=15, decimal_places=2)
+credito = models.DecimalField(max_digits=15, decimal_places=2)
+saldo_atual = models.DecimalField(max_digits=15, decimal_places=2)
+4.4 analises/models.py
+class DRELinha(BaseModel):
+periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE)
+ordem = models.IntegerField()
+descricao = models.CharField(max_length=200)
+P├ígina 8
+
+--- PAGINA 9 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+valor = models.DecimalField(max_digits=15, decimal_places=2)
+percentual_av = models.DecimalField(max_digits=8, decimal_places=4)
+class Indicador(BaseModel):
+periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE)
+categoria = models.CharField() #
+liquidez/rentabilidade/endividamento/atividade
+nome = models.CharField(max_length=100)
+valor = models.DecimalField(max_digits=12, decimal_places=4)
+referencia_setor = models.DecimalField(null=True, blank=True)
+status = models.CharField() # bom/atencao/critico
+4.5 risco/models.py
+class Score(BaseModel):
+periodo = models.OneToOneField(Periodo, on_delete=models.CASCADE)
+score_geral = models.DecimalField(max_digits=5, decimal_places=2)
+score_liquidez = models.DecimalField(max_digits=5, decimal_places=2)
+score_rentabilidade = models.DecimalField(max_digits=5, decimal_places=2)
+score_endividamento = models.DecimalField(max_digits=5, decimal_places=2)
+score_operacional = models.DecimalField(max_digits=5, decimal_places=2)
+narrativa_ia = models.TextField(blank=True) # Gerada pelo Claude
+classificacao = models.CharField() # excelente/boa/atencao/risco/critico
+P├ígina 9
+
+--- PAGINA 10 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+5. Padr├úo de Views com Gr├íficos Plotly
+A integra├º├úo Django + Plotly funciona assim: a view gera o gr├ífico em Python, converte
+para HTML e passa ao template.
+5.1 View Exemplo (indicadores)
+# analises/views.py
+import plotly.graph_objects as go
+from plotly.utils import PlotlyJSONEncoder
+import json
+def dashboard_indicadores(request, periodo_id):
+indicadores = Indicador.objects.filter(periodo_id=periodo_id)
+# Gerar gr├ífico Plotly
+fig = go.Figure(go.Indicator(
+mode='gauge+number',
+value=indicadores.filter(nome='Liquidez Corrente').first().valor,
+title={'text': 'Liquidez Corrente'},
+gauge={'axis': {'range': [0, 3]}}
+))
+chart_json = json.dumps(fig, cls=PlotlyJSONEncoder)
+return render(request, 'analises/indicadores.html', {
+'indicadores': indicadores,
+'chart_json': chart_json,
+})
+5.2 Template Exemplo
+<!-- templates/analises/indicadores.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div id="chart"></div>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+var data = {{ chart_json|safe }};
+Plotly.newPlot('chart', data.data, data.layout);
+</script>
+{% endblock %}
+5.3 Padr├úo do Chat via AJAX
+# chat/views.py
+from django.http import JsonResponse
+from .services.chat_service import ChatAgent
+def chat_api(request):
+if request.method == 'POST':
+pergunta = json.loads(request.body)['pergunta']
+agent = ChatAgent(empresa_id=request.session['empresa_id'])
+resposta = agent.responder(pergunta)
+return JsonResponse({'resposta': resposta})
+P├ígina 10
+
+--- PAGINA 11 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+O frontend do chat usa JavaScript puro (fetch API) para enviar perguntas e receber
+respostas sem recarregar a p├ígina.
+P├ígina 11
+
+--- PAGINA 12 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+6. Pipeline dos Agentes no Django
+Cada agente ├® implementado como um service dentro da app correspondente. O
+orchestrator coordena a execu├º├úo sequencial.
+6.1 Classe Base do Agente
+# agents/base_agent.py
+from abc import ABC, abstractmethod
+import logging
+class BaseAgent(ABC):
+def __init__(self, periodo_id):
+self.periodo_id = periodo_id
+self.logger = logging.getLogger(self.__class__.__name__)
+@abstractmethod
+def executar(self):
+"""Executa a l├│gica do agente e salva resultados no DB."""
+pass
+def validar_inputs(self):
+"""Verifica se os dados necess├írios existem."""
+pass
+6.2 Orquestrador
+# agents/orchestrator.py
+class FinAgentOrchestrator:
+def __init__(self, periodo_id):
+self.periodo_id = periodo_id
+def executar_pipeline(self):
+"""Executa todos os agentes em sequ├¬ncia."""
+agents = [
+ParserService(self.periodo_id), # Agente 1
+DREService(self.periodo_id), # Agente 2
+AnalyzerService(self.periodo_id), # Agente 3
+KPIService(self.periodo_id), # Agente 4
+RiskService(self.periodo_id), # Agente 5
+]
+for agent in agents:
+agent.validar_inputs()
+agent.executar()
+# Agentes 6 e 7 s├úo sob demanda
+6.3 Celery Task (Background)
+# agents/tasks.py
+from celery import shared_task
+@shared_task
+def processar_balancete(periodo_id):
+P├ígina 12
+
+--- PAGINA 13 ---
+FinAgent ÔÇö Plano de Implanta├º├úo (Django)
+orchestrator = FinAgentOrchestrator(periodo_id)
+orchestrator.executar_pipeline()
+Periodo.objects.filter(id=periodo_id).update(status='processado')
+O usu├írio faz upload, o Celery processa em background, e a p├ígina atualiza o status via
+polling ou HTMX.
+P├ígina 13
+

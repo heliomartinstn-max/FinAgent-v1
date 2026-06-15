@@ -1,0 +1,465 @@
+
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard KPI CVM - 2025-03</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #f8fafc;
+                color: #1e293b;
+                margin: 0;
+                padding: 10px 40px;
+                -webkit-print-color-adjust: exact;
+            }
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 2px solid #e2e8f0;
+                padding-bottom: 10px;
+                margin-bottom: 15px;
+            }
+            .title h1 { margin: 0; font-size: 26px; color: #0f172a; }
+            .title h2 { margin: 3px 0 0 0; font-size: 15px; color: #64748b; font-weight: 500; }
+            
+            .overview {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px;
+                margin-bottom: 25px;
+            }
+            .overview-card {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 15px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            .overview-card h3 {
+                margin: 0; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;
+            }
+            .overview-card .value { font-size: 20px; font-weight: 700; color: #0f172a; margin-top: 5px; }
+            
+            .section {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                margin-bottom: 20px;
+                overflow: hidden;
+            }
+            .section-header {
+                padding: 12px 20px;
+                background-color: #f1f5f9;
+                border-bottom: 1px solid #e2e8f0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .section-title {
+                margin: 0; font-size: 16px; color: #0f172a; font-weight: 600; display: flex; align-items: center;
+            }
+            .dot {
+                height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 10px;
+            }
+            .subtext { font-size: 13px; color: #64748b; }
+            
+            table { width: 100%; border-collapse: collapse; font-size: 13px; }
+            th { text-align: left; padding: 12px 20px; font-weight: 600; color: #64748b; border-bottom: 1px solid #e2e8f0; text-transform: uppercase; font-size: 11px; }
+            td { padding: 12px 20px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+            tr:last-child td { border-bottom: none; }
+            
+            .td-indicador { width: 22%; color: #0f172a; font-size: 13px;}
+            .td-valor { width: 13%; font-weight: 700; color: #2563eb; font-size: 14px;}
+            .td-formula { width: 20%; }
+            .td-formula code { background: #f1f5f9; padding: 3px 6px; border-radius: 4px; color: #475569; font-size: 11px; font-family: monospace; }
+            .td-norma { width: 15%; }
+            .td-ref { width: 30%; color: #475569; line-height: 1.4; }
+            
+            .badge {
+                padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; display: inline-block;
+            }
+            .badge-blue { background: #e0e7ff; color: #4f46e5; }
+            .badge-green { background: #dcfce7; color: #16a34a; }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="title">
+                <h1>Painel de Indicadores CVM</h1>
+                <h2>Relatório Analítico de KPIs | Base Normativa: CVM / IFRS / B3</h2>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 12px; color: #64748b;">Competência</div>
+                <div style="font-size: 20px; font-weight: 700; color: #2563eb;">2025-03</div>
+            </div>
+        </div>
+
+        <div class="overview">
+            <div class="overview-card">
+                <h3>Receita Líquida</h3>
+                <div class="value">R$ 427.275,75</div>
+            </div>
+            <div class="overview-card">
+                <h3>EBITDA Est.</h3>
+                <div class="value">-R$ 3.437.906,79</div>
+            </div>
+            <div class="overview-card">
+                <h3>Lucro Líquido</h3>
+                <div class="value">R$ 59.095,37</div>
+            </div>
+            <div class="overview-card">
+                <h3>Ativo Total</h3>
+                <div class="value">R$ 26.708.820,16</div>
+            </div>
+        </div>
+
+        <!-- 1. Liquidez -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title"><span class="dot" style="background-color: #3b82f6;"></span> 1. Liquidez</h2>
+                <span class="subtext">Capacidade de pagamento</span>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Indicador</th><th>Valor</th><th>Fórmula</th><th>Norma</th><th>Referência / Observação</th></tr>
+                </thead>
+                <tbody>
+                    
+        <tr>
+            <td class="td-indicador"><strong>Liquidez corrente</strong></td>
+            <td class="td-valor">0.65x</td>
+            <td class="td-formula"><code>AC / PC</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">Referência ≥ 1,0 para saúde operacional</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Liquidez seca</strong></td>
+            <td class="td-valor">0.28x</td>
+            <td class="td-formula"><code>(AC - Estoques) / PC</code></td>
+            <td class="td-norma"><span class="badge badge-green">CPC / IFRS</span></td>
+            <td class="td-ref">Exclui ativos de menor conversibilidade</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Liquidez imediata</strong></td>
+            <td class="td-valor">0.46x</td>
+            <td class="td-formula"><code>Disponibilidades / PC</code></td>
+            <td class="td-norma"><span class="badge badge-green">CPC / IFRS</span></td>
+            <td class="td-ref">Caixa e equivalentes sobre passivo circulante</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Liquidez geral</strong></td>
+            <td class="td-valor">0.29x</td>
+            <td class="td-formula"><code>(AC + RLP) / (PC + PNC)</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">Visão de longo prazo</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Capital de giro líquido (CGL)</strong></td>
+            <td class="td-valor">-R$ 1.933.590,25</td>
+            <td class="td-formula"><code>AC - PC</code></td>
+            <td class="td-norma"><span class="badge badge-green">CPC / IFRS</span></td>
+            <td class="td-ref">Folga financeira de curto prazo</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Necessidade cap. de giro (NCG)</strong></td>
+            <td class="td-valor">R$ 887.250,12</td>
+            <td class="td-formula"><code>Ativo oper. - Passivo oper.</code></td>
+            <td class="td-norma"><span class="badge badge-green">CPC / IFRS</span></td>
+            <td class="td-ref">Modelo Fleuriet - exigido em laudos CVM</td>
+        </tr>
+    
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 2. Endividamento -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title"><span class="dot" style="background-color: #65a30d;"></span> 2. Endividamento e estrutura de capital</h2>
+                <span class="subtext">Alavancagem e solvência</span>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Indicador</th><th>Valor</th><th>Fórmula</th><th>Norma</th><th>Referência / Observação</th></tr>
+                </thead>
+                <tbody>
+                    
+        <tr>
+            <td class="td-indicador"><strong>Endividamento geral</strong></td>
+            <td class="td-valor">47.25%</td>
+            <td class="td-formula"><code>(PC + PNC) / AT</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">% dos ativos financiados por terceiros</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Composição do endividamento</strong></td>
+            <td class="td-valor">43.97%</td>
+            <td class="td-formula"><code>PC / (PC + PNC)</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">Concentração da dívida no curto prazo</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Dívida líquida</strong></td>
+            <td class="td-valor">R$ 3.091.125,03</td>
+            <td class="td-formula"><code>Dívida bruta - Caixa</code></td>
+            <td class="td-norma"><span class="badge badge-blue">B3 obrigatório</span></td>
+            <td class="td-ref">Divulgação obrigatória ITR/DFP — B3/CVM</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Dívida líquida / EBITDA</strong></td>
+            <td class="td-valor">-0.90x</td>
+            <td class="td-formula"><code>Dív. Líquida / EBITDA</code></td>
+            <td class="td-norma"><span class="badge badge-blue">B3 obrigatório</span></td>
+            <td class="td-ref">Covenant padrão de mercado (máx. 3,0x-4,0x)</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Patrimônio líquido / AT</strong></td>
+            <td class="td-valor">34.97%</td>
+            <td class="td-formula"><code>PL / AT</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">Imobilização analítica do patrimônio sobre base total</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Índ. de cobertura de juros (ICJ)</strong></td>
+            <td class="td-valor">N/A</td>
+            <td class="td-formula"><code>EBIT / Desp. fin.</code></td>
+            <td class="td-norma"><span class="badge badge-blue">B3 obrigatório</span></td>
+            <td class="td-ref">Mínimo 1,5x em covenants típicos</td>
+        </tr>
+    
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 3. Rentabilidade -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title"><span class="dot" style="background-color: #8b5cf6;"></span> 3. Rentabilidade e geração de valor</h2>
+                <span class="subtext">Eficiência e retorno</span>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Indicador</th><th>Valor</th><th>Fórmula</th><th>Norma</th><th>Referência / Observação</th></tr>
+                </thead>
+                <tbody>
+                    
+        <tr>
+            <td class="td-indicador"><strong>ROE — Retorno sobre PL</strong></td>
+            <td class="td-valor">0.63%</td>
+            <td class="td-formula"><code>Lucro líq. / PL</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">CMPC de referência para B3</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>ROA — Retorno sobre ativos</strong></td>
+            <td class="td-valor">0.22%</td>
+            <td class="td-formula"><code>Lucro líq. / AT</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">Eficiência de uso dos ativos totais</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>ROIC</strong></td>
+            <td class="td-valor">-15.13%</td>
+            <td class="td-formula"><code>NOPAT / Capital inv.</code></td>
+            <td class="td-norma"><span class="badge badge-blue">B3 obrigatório</span></td>
+            <td class="td-ref">Valor criado acima do custo de capital</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Margem bruta</strong></td>
+            <td class="td-valor">-437.61%</td>
+            <td class="td-formula"><code>Lucro bruto / Receita</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">Capacidade produtiva; exigida na DRE</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Margem EBITDA</strong></td>
+            <td class="td-valor">-804.61%</td>
+            <td class="td-formula"><code>EBITDA / Receita líq.</code></td>
+            <td class="td-norma"><span class="badge badge-blue">B3 obrigatório</span></td>
+            <td class="td-ref">ICVM 527/12 regula cálculo</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Margem líquida</strong></td>
+            <td class="td-valor">13.83%</td>
+            <td class="td-formula"><code>Lucro líq. / Receita líq.</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">Eficiência final após impostos</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Giro do ativo</strong></td>
+            <td class="td-valor">0.02x</td>
+            <td class="td-formula"><code>Receita líq. / AT</code></td>
+            <td class="td-norma"><span class="badge badge-green">CPC / IFRS</span></td>
+            <td class="td-ref">Produtividade dos ativos (DuPont)</td>
+        </tr>
+    
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 4. Atividade -->
+        <div class="section" style="page-break-inside: avoid;">
+            <div class="section-header">
+                <h2 class="section-title"><span class="dot" style="background-color: #f59e0b;"></span> 4. Atividade e ciclos operacionais</h2>
+                <span class="subtext">Gestão de prazos</span>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Indicador</th><th>Valor</th><th>Fórmula</th><th>Norma</th><th>Referência / Observação</th></tr>
+                </thead>
+                <tbody>
+                    
+        <tr>
+            <td class="td-indicador"><strong>Prazo méd. recebimento (PMR)</strong></td>
+            <td class="td-valor">2756 dias</td>
+            <td class="td-formula"><code>C. Receber / (Rec / 360)</code></td>
+            <td class="td-norma"><span class="badge badge-green">CPC / IFRS</span></td>
+            <td class="td-ref">CPC 47 — reconhecimento de receita afeta base</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Prazo méd. estocagem (PME)</strong></td>
+            <td class="td-valor">322 dias</td>
+            <td class="td-formula"><code>Estoques / (CPV / 360)</code></td>
+            <td class="td-norma"><span class="badge badge-green">CPC / IFRS</span></td>
+            <td class="td-ref">CPC 16 — custo dos estoques</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Prazo méd. pagamento (PMP)</strong></td>
+            <td class="td-valor">696 dias</td>
+            <td class="td-formula"><code>Fornecedores / (Com. / 360)</code></td>
+            <td class="td-norma"><span class="badge badge-green">CPC / IFRS</span></td>
+            <td class="td-ref">Funding operacional de fornecedores</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Ciclo operacional</strong></td>
+            <td class="td-valor">3078 dias</td>
+            <td class="td-formula"><code>PMR + PME</code></td>
+            <td class="td-norma"><span class="badge badge-green">CPC / IFRS</span></td>
+            <td class="td-ref">Tempo total entre compra e recebimento</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Ciclo financeiro (de caixa)</strong></td>
+            <td class="td-valor">2383 dias</td>
+            <td class="td-formula"><code>PMR + PME - PMP</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">Dias em que a empresa financia o próprio giro</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Giro de contas a receber</strong></td>
+            <td class="td-valor">0.13x</td>
+            <td class="td-formula"><code>Receita / C. Receber</code></td>
+            <td class="td-norma"><span class="badge badge-green">CPC / IFRS</span></td>
+            <td class="td-ref">Velocidade de conversão de créditos</td>
+        </tr>
+    
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 5. Fluxo de Caixa -->
+        <div class="section" style="page-break-inside: avoid;">
+            <div class="section-header">
+                <h2 class="section-title"><span class="dot" style="background-color: #ea580c;"></span> 5. Fluxo de caixa (DFC)</h2>
+                <span class="subtext">CPC 03 / NBC TG 03</span>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Indicador</th><th>Valor</th><th>Fórmula</th><th>Norma</th><th>Referência / Observação</th></tr>
+                </thead>
+                <tbody>
+                    
+        <tr>
+            <td class="td-indicador"><strong>FCO (fluxo das operações)</strong></td>
+            <td class="td-valor">-R$ 79.826,60</td>
+            <td class="td-formula"><code>Lucro + Aj. ± Var. Giro</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">Método indireto — CPC 03 aproximado</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>FCO / Lucro líquido</strong></td>
+            <td class="td-valor">-1.35x</td>
+            <td class="td-formula"><code>FCO / LL</code></td>
+            <td class="td-norma"><span class="badge badge-green">Ambos</span></td>
+            <td class="td-ref">Qualidade do lucro; > 1 = suportado por caixa</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>FCFF — fluxo livre firma</strong></td>
+            <td class="td-valor">-R$ 985.946,95</td>
+            <td class="td-formula"><code>FCO - CAPEX</code></td>
+            <td class="td-norma"><span class="badge badge-blue">B3 obrigatório</span></td>
+            <td class="td-ref">Base de valuation DCF</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>FCFE — fluxo livre acionista</strong></td>
+            <td class="td-valor">-R$ 985.946,95</td>
+            <td class="td-formula"><code>FCFF - Juros + Dívidas</code></td>
+            <td class="td-norma"><span class="badge badge-blue">B3 obrigatório</span></td>
+            <td class="td-ref">DDM e modelos Equity B3</td>
+        </tr>
+    
+                    
+        <tr>
+            <td class="td-indicador"><strong>Cobertura de dívida por caixa</strong></td>
+            <td class="td-valor">-0.14x</td>
+            <td class="td-formula"><code>FCO / Serviço dívida</code></td>
+            <td class="td-norma"><span class="badge badge-blue">B3 obrigatório</span></td>
+            <td class="td-ref">DSCR — operações de crédito</td>
+        </tr>
+    
+                </tbody>
+            </table>
+        </div>
+    </body>
+    </html>
+    

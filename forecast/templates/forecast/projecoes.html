@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Forecast — {{ periodo }}{% endblock %}
+{% block page_title %}Projeções Forecast · {{ periodo }}{% endblock %}
+{% block extra_head %}
+{% if chart_json %}<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>{% endif %}
+{% endblock %}
+{% block content %}
+{% if chart_json %}
+<div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:12px; padding:20px; margin-bottom:24px;">
+    <div id="forecast-chart"></div>
+</div>
+{% endif %}
+{% if projecoes %}
+<div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:12px; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr style="border-bottom:1px solid var(--fa-border);">
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted);">Indicador</th>
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted);">Data</th>
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:right;">Projetado</th>
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:right;">Intervalo 80%</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in projecoes %}
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+                <td style="padding:9px 16px; font-size:13px; color:var(--fa-text);">{{ p.get_indicador_display }}</td>
+                <td style="padding:9px 16px; font-size:12px; color:var(--fa-text-muted);">{{ p.data_projecao|date:"d/m/Y" }}</td>
+                <td style="padding:9px 16px; font-size:13px; font-weight:600; color:#3b82f6; text-align:right;">R$ {{ p.valor_projetado|floatformat:2 }}</td>
+                <td style="padding:9px 16px; font-size:11px; color:var(--fa-text-muted); text-align:right;">{{ p.intervalo_inferior|floatformat:0 }} — {{ p.intervalo_superior|floatformat:0 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div style="text-align:center; padding:60px; color:var(--fa-text-muted); background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:12px;">
+    <div style="font-size:36px; margin-bottom:12px;">📈</div>
+    <div style="font-size:14px; margin-bottom:8px; color:var(--fa-text);">Forecast não disponível</div>
+    <div style="font-size:13px;">São necessários pelo menos 12 meses de dados históricos para gerar projeções com Prophet.</div>
+</div>
+{% endif %}
+{% endblock %}
+{% block extra_js %}
+{% if chart_json %}
+<script>
+var fig = {{ chart_json|safe }};
+Plotly.newPlot('forecast-chart', fig.data, fig.layout, {responsive:true, displayModeBar:false});
+</script>
+{% endif %}
+{% endblock %}

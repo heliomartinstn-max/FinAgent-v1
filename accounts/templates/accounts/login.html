@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinAgent — Acesso ao Sistema</title>
+    <meta name="description" content="Painel de acesso ao FinAgent — Motor de Inteligência Financeira com Agentes IA">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fa-primary: #3b82f6;
+            --fa-secondary: #8b5cf6;
+            --fa-bg: #0d1117;
+            --fa-surface: #161b22;
+            --fa-border: rgba(255,255,255,0.08);
+            --fa-text: #e6edf3;
+            --fa-text-muted: #8b949e;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--fa-bg);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ── SIDE VISUAL ── */
+        .login-visual {
+            flex: 1;
+            background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 40%, #0f1724 100%);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: flex-start;
+            padding: 60px 64px;
+            position: relative; overflow: hidden;
+        }
+        .login-visual::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 30% 40%, rgba(59,130,246,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 70%, rgba(139,92,246,0.10) 0%, transparent 60%);
+        }
+        .login-visual .vis-content { position: relative; z-index: 1; max-width: 460px; }
+        .login-visual .vis-logo {
+            display: flex; align-items: center; gap: 14px; margin-bottom: 52px;
+        }
+        .vis-logo-icon {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, var(--fa-primary), var(--fa-secondary));
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: white;
+        }
+        .vis-logo-text { font-size: 26px; font-weight: 700;
+            background: linear-gradient(90deg, var(--fa-primary), var(--fa-secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .vis-logo-sub { font-size: 12px; color: var(--fa-text-muted); margin-top: 2px; }
+        .login-visual h1 {
+            font-size: 38px; font-weight: 700; line-height: 1.2;
+            color: var(--fa-text); margin-bottom: 18px;
+        }
+        .login-visual h1 span {
+            background: linear-gradient(90deg, var(--fa-primary), var(--fa-secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .login-visual p {
+            font-size: 15px; color: var(--fa-text-muted); line-height: 1.7; margin-bottom: 42px;
+        }
+        .feature-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+        .feature-list li {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 13px; color: var(--fa-text-muted);
+        }
+        .feature-list li .fi {
+            width: 30px; height: 30px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; flex-shrink: 0;
+        }
+        .vis-footer {
+            position: absolute; bottom: 28px; left: 64px;
+            font-size: 11px; color: rgba(139,148,158,0.5);
+            z-index: 1;
+        }
+
+        /* ── LOGIN FORM ── */
+        .login-panel {
+            width: 440px; flex-shrink: 0;
+            background: var(--fa-surface);
+            border-left: 1px solid var(--fa-border);
+            display: flex; flex-direction: column;
+            justify-content: center;
+            padding: 52px 44px;
+        }
+        .login-panel h2 {
+            font-size: 22px; font-weight: 700; color: var(--fa-text); margin-bottom: 6px;
+        }
+        .login-panel .subtitle {
+            font-size: 13px; color: var(--fa-text-muted); margin-bottom: 36px;
+        }
+        .form-label-fa {
+            display: block; font-size: 12px; font-weight: 600;
+            color: var(--fa-text-muted); margin-bottom: 7px;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .form-control-fa {
+            width: 100%; padding: 11px 14px;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--fa-border);
+            border-radius: 8px; color: var(--fa-text);
+            font-size: 14px; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .form-control-fa::placeholder { color: rgba(139,148,158,0.5); }
+        .form-control-fa:focus {
+            border-color: var(--fa-primary);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+            background: rgba(0,0,0,0.35);
+        }
+        .input-group-fa {
+            position: relative;
+        }
+        .input-group-fa .input-icon {
+            position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+            color: var(--fa-text-muted); font-size: 15px; pointer-events: none;
+        }
+        .input-group-fa .form-control-fa { padding-left: 38px; }
+        .input-group-fa .toggle-password {
+            position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+            color: var(--fa-text-muted); cursor: pointer; font-size: 15px;
+            background: none; border: none; padding: 0; transition: color 0.15s;
+        }
+        .input-group-fa .toggle-password:hover { color: var(--fa-text); }
+        .form-group-fa { margin-bottom: 20px; }
+        .btn-login-fa {
+            width: 100%; padding: 12px;
+            background: linear-gradient(90deg, var(--fa-primary), #2563eb);
+            color: white; border: none; border-radius: 8px;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            font-family: 'Inter', sans-serif;
+            margin-top: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-login-fa:hover  { opacity: 0.88; }
+        .btn-login-fa:active { transform: scale(0.98); }
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            margin: 26px 0; color: var(--fa-text-muted); font-size: 12px;
+        }
+        .divider hr { flex: 1; border: none; border-top: 1px solid var(--fa-border); }
+        .link-muted {
+            color: var(--fa-text-muted); font-size: 12px; text-decoration: none;
+            display: block; text-align: center; transition: color 0.15s;
+        }
+        .link-muted:hover { color: var(--fa-primary); }
+        .alert-fa {
+            padding: 11px 14px; border-radius: 8px; font-size: 13px;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
+        }
+        .alert-error {
+            background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.25);
+            color: #f85149;
+        }
+        .alert-success {
+            background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.25);
+            color: #3fb950;
+        }
+        .level-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 10px; font-weight: 600; padding: 3px 10px;
+            border-radius: 20px; background: rgba(59,130,246,0.12);
+            color: var(--fa-primary); border: 1px solid rgba(59,130,246,0.2);
+            margin-bottom: 24px;
+        }
+
+        /* Responsivo */
+        @media (max-width: 900px) {
+            .login-visual { display: none; }
+            .login-panel { width: 100%; border-left: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAINEL VISUAL (esquerda) -->
+    <div class="login-visual">
+        <div class="vis-content">
+            <div class="vis-logo">
+                <div class="vis-logo-icon">⚡</div>
+                <div>
+                    <div class="vis-logo-text">FinAgent</div>
+                    <div class="vis-logo-sub">Motor de Inteligência Financeira</div>
+                </div>
+            </div>
+
+            <h1>Análise financeira<br>com <span>Agentes IA</span></h1>
+            <p>
+                Processe balancetes contábeis, gere DREs, calcule KPIs, avalie riscos e obtenha 
+                narrativas geradas pelo Claude Sonnet — tudo em um único painel.
+            </p>
+
+            <ul class="feature-list">
+                <li>
+                    <div class="fi" style="background:rgba(59,130,246,0.12);color:#3b82f6;">📊</div>
+                    <div><strong style="color:var(--fa-text);">DRE Gerencial</strong> · Waterfall chart automatizado do balancete</div>
+                </li>
+                <li>
+                    <div class="fi" style="background:rgba(139,92,246,0.12);color:#8b5cf6;">⚡</div>
+                    <div><strong style="color:var(--fa-text);">Pipeline de 7 Agentes</strong> · Parser → DRE → KPIs → Risco → IA</div>
+                </li>
+                <li>
+                    <div class="fi" style="background:rgba(63,185,80,0.12);color:#3fb950;">🤖</div>
+                    <div><strong style="color:var(--fa-text);">Claude Sonnet API</strong> · Narrativas e análises em linguagem natural</div>
+                </li>
+                <li>
+                    <div class="fi" style="background:rgba(210,153,34,0.12);color:#d29922;">📈</div>
+                    <div><strong style="color:var(--fa-text);">Forecast Prophet</strong> · Projeções de séries temporais financeiras</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="vis-footer">
+            UFG — Especialização em Sistemas e Agentes Inteligentes · Abril 2026
+        </div>
+    </div>
+
+    <!-- PAINEL DE LOGIN (direita) -->
+    <div class="login-panel">
+        <div class="level-badge">
+            <i class="bi bi-shield-lock"></i> Acesso Restrito
+        </div>
+
+        <h2>Entrar no FinAgent</h2>
+        <p class="subtitle">Utilize seu e-mail corporativo e senha de acesso.</p>
+
+        <!-- Mensagens -->
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert-fa {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+                <i class="bi {% if message.tags == 'error' %}bi-exclamation-circle-fill{% else %}bi-check-circle-fill{% endif %}"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="{% url 'accounts:login' %}" novalidate>
+            {% csrf_token %}
+
+            <!-- E-mail -->
+            <div class="form-group-fa">
+                <label for="email" class="form-label-fa">E-mail corporativo</label>
+                <div class="input-group-fa">
+                    <i class="bi bi-envelope input-icon"></i>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="form-control-fa"
+                        placeholder="usuario@empresa.com.br"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Senha -->
+            <div class="form-group-fa">
+                <label for="password" class="form-label-fa">Senha</label>
+                <div class="input-group-fa">
+                    <i class="bi bi-lock input-icon"></i>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control-fa"
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                        required
+                    >
+                    <button type="button" class="toggle-password" id="togglePwd" title="Mostrar/ocultar senha">
+                        <i class="bi bi-eye" id="toggleIcon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login-fa" id="btn-entrar">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Acessar o Sistema
+            </button>
+        </form>
+
+        <div class="divider">
+            <hr> <span>ou</span> <hr>
+        </div>
+
+        <a href="#" class="link-muted">
+            <i class="bi bi-key me-1"></i> Esqueceu a senha? Fale com o administrador
+        </a>
+
+        <!-- Níveis de Acesso -->
+        <div style="margin-top:36px; padding-top:24px; border-top:1px solid var(--fa-border);">
+            <div style="font-size:11px; font-weight:600; color:var(--fa-text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
+                Níveis de Acesso
+            </div>
+            <div style="display:flex; flex-direction:column; gap:7px;">
+                <div style="font-size:12px; color:var(--fa-text-muted); display:flex; align-items:center; gap:8px;">
+                    <span style="background:rgba(248,81,73,0.12); color:#f85149; padding:2px 8px; border-radius:5px; font-size:10px; font-weight:600;">ADMIN</span>
+                    Acesso total — configuração e gestão de usuários
+                </div>
+                <div style="font-size:12px; color:var(--fa-text-muted); display:flex; align-items:center; gap:8px;">
+                    <span style="background:rgba(59,130,246,0.12); color:#3b82f6; padding:2px 8px; border-radius:5px; font-size:10px; font-weight:600;">ANALISTA</span>
+                    Upload, análise e relatórios financeiros
+                </div>
+                <div style="font-size:12px; color:var(--fa-text-muted); display:flex; align-items:center; gap:8px;">
+                    <span style="background:rgba(63,185,80,0.12); color:#3fb950; padding:2px 8px; border-radius:5px; font-size:10px; font-weight:600;">GESTOR</span>
+                    Visualização de dashboards e relatórios
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Toggle mostrar/ocultar senha
+    document.getElementById('togglePwd').addEventListener('click', function() {
+        const pwd = document.getElementById('password');
+        const icon = document.getElementById('toggleIcon');
+        if (pwd.type === 'password') {
+            pwd.type = 'text';
+            icon.className = 'bi bi-eye-slash';
+        } else {
+            pwd.type = 'password';
+            icon.className = 'bi bi-eye';
+        }
+    });
+</script>
+</body>
+</html>

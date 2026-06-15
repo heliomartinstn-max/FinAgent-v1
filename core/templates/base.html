@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FinAgent{% endblock %} — Motor de Inteligência Financeira</title>
+    <meta name="description" content="FinAgent — Sistema de análise financeira com agentes inteligentes">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fa-primary: #3b82f6;
+            --fa-primary-dark: #2563eb;
+            --fa-secondary: #8b5cf6;
+            --fa-bg: #0d1117;
+            --fa-surface: #161b22;
+            --fa-surface-2: #21262d;
+            --fa-border: rgba(255,255,255,0.08);
+            --fa-text: #e6edf3;
+            --fa-text-muted: #8b949e;
+            --fa-success: #3fb950;
+            --fa-warning: #d29922;
+            --fa-danger: #f85149;
+            --sidebar-width: 250px;
+        }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body {
+            background: var(--fa-bg);
+            color: var(--fa-text);
+            min-height: 100vh;
+            margin: 0;
+        }
+        /* ── SIDEBAR ── */
+        #sidebar {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--fa-surface);
+            border-right: 1px solid var(--fa-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: width 0.2s;
+        }
+        .sidebar-brand {
+            padding: 22px 20px 18px;
+            border-bottom: 1px solid var(--fa-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .sidebar-brand .brand-icon {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, var(--fa-primary), var(--fa-secondary));
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: white; flex-shrink: 0;
+        }
+        .sidebar-brand .brand-text {
+            font-size: 18px; font-weight: 700;
+            background: linear-gradient(90deg, var(--fa-primary), var(--fa-secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .sidebar-brand .brand-sub {
+            font-size: 10px; color: var(--fa-text-muted);
+            text-transform: uppercase; letter-spacing: 0.05em;
+            -webkit-text-fill-color: var(--fa-text-muted);
+        }
+        .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+        .nav-section-label {
+            font-size: 10px; font-weight: 600;
+            color: var(--fa-text-muted);
+            text-transform: uppercase; letter-spacing: 0.08em;
+            padding: 14px 20px 6px;
+        }
+        .nav-item a {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 20px;
+            color: var(--fa-text-muted);
+            text-decoration: none; font-size: 13px; font-weight: 500;
+            border-radius: 0; transition: all 0.15s;
+            border-left: 3px solid transparent;
+        }
+        .nav-item a:hover, .nav-item a.active {
+            color: var(--fa-text);
+            background: rgba(59,130,246,0.08);
+            border-left-color: var(--fa-primary);
+        }
+        .nav-item a .bi { font-size: 16px; width: 20px; flex-shrink: 0; }
+        .sidebar-footer {
+            padding: 14px 20px;
+            border-top: 1px solid var(--fa-border);
+            font-size: 12px; color: var(--fa-text-muted);
+        }
+        .sidebar-footer .user-info { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .user-avatar {
+            width: 30px; height: 30px;
+            background: linear-gradient(135deg, var(--fa-primary), var(--fa-secondary));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 600; color: white;
+        }
+        .sidebar-footer a {
+            color: var(--fa-text-muted); text-decoration: none; font-size: 12px;
+            display: flex; align-items: center; gap: 6px;
+            transition: color 0.15s;
+        }
+        .sidebar-footer a:hover { color: var(--fa-danger); }
+        /* ── MAIN CONTENT ── */
+        #main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+        }
+        /* ── TOPBAR ── */
+        #topbar {
+            background: var(--fa-surface);
+            border-bottom: 1px solid var(--fa-border);
+            padding: 14px 28px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 50;
+        }
+        .page-title { font-size: 16px; font-weight: 600; color: var(--fa-text); }
+        .topbar-actions { display: flex; align-items: center; gap: 12px; }
+        .btn-icon {
+            width: 34px; height: 34px;
+            background: var(--fa-surface-2);
+            border: 1px solid var(--fa-border);
+            border-radius: 8px; color: var(--fa-text-muted);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; text-decoration: none; transition: all 0.15s;
+        }
+        .btn-icon:hover { background: var(--fa-border); color: var(--fa-text); }
+        /* ── PAGE BODY ── */
+        .page-body { padding: 28px; flex: 1; }
+        /* ── CARDS ── */
+        .card-dark {
+            background: var(--fa-surface);
+            border: 1px solid var(--fa-border);
+            border-radius: 12px;
+        }
+        /* ── ALERTS ── */
+        .alert-container { padding: 0 28px; }
+        .alert-fa {
+            padding: 12px 16px; border-radius: 8px;
+            font-size: 13px; margin-top: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .alert-fa-success { background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.3); color: #3fb950; }
+        .alert-fa-error   { background: rgba(248,81,73,0.1);  border: 1px solid rgba(248,81,73,0.3);  color: #f85149; }
+        .alert-fa-info    { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: #58a6ff; }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<nav id="sidebar">
+    <a href="{% url 'core:home' %}" class="sidebar-brand">
+        <div class="brand-icon">⚡</div>
+        <div>
+            <div class="brand-text">FinAgent</div>
+            <div class="brand-sub">v1.0 · UFG</div>
+        </div>
+    </a>
+
+    <div class="sidebar-nav">
+        <div class="nav-section-label">Principal</div>
+        <div class="nav-item">
+            <a href="{% url 'core:home' %}" id="nav-home">
+                <i class="bi bi-grid-1x2-fill"></i> Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{% url 'empresas:list' %}" id="nav-empresas">
+                <i class="bi bi-building"></i> Empresas
+            </a>
+        </div>
+
+        <div class="nav-section-label">Análise</div>
+        <div class="nav-item">
+            <a href="{% url 'contabil:upload' %}" id="nav-upload">
+                <i class="bi bi-cloud-arrow-up-fill"></i> Upload Balancete
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" id="nav-dre" title="Selecione um período na empresa">
+                <i class="bi bi-bar-chart-line-fill"></i> DRE Gerencial
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" id="nav-indicadores" title="Selecione um período na empresa">
+                <i class="bi bi-speedometer2"></i> KPIs & Indicadores
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" id="nav-risco" title="Selecione um período na empresa">
+                <i class="bi bi-shield-exclamation"></i> Score de Risco
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" id="nav-projecoes" title="Selecione um período na empresa">
+                <i class="bi bi-graph-up-arrow"></i> Projeções (Forecast)
+            </a>
+        </div>
+
+        <div class="nav-section-label">Inteligência</div>
+        <div class="nav-item">
+            <a href="{% url 'chat:chat' %}" id="nav-chat">
+                <i class="bi bi-chat-dots-fill"></i> Chat FinAgent IA
+            </a>
+        </div>
+
+        {% if user.is_staff %}
+        <div class="nav-section-label">Administração</div>
+        <div class="nav-item">
+            <a href="{% url 'accounts:usuarios' %}" id="nav-usuarios">
+                <i class="bi bi-people-fill"></i> Usuários
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="/admin/" id="nav-admin">
+                <i class="bi bi-gear-fill"></i> Painel Admin
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="user-info">
+            <div class="user-avatar">{{ user.email|first|upper }}</div>
+            <div>
+                <div style="font-weight:500; color:var(--fa-text); font-size:12px;">{{ user.get_full_name|default:user.email }}</div>
+                <div style="font-size:10px;">{{ user.nivel_acesso|default:"Usuário" }}</div>
+            </div>
+        </div>
+        <a href="{% url 'accounts:logout' %}">
+            <i class="bi bi-box-arrow-left"></i> Sair do sistema
+        </a>
+    </div>
+</nav>
+
+<!-- ── MAIN ── -->
+<div id="main-content">
+    <header id="topbar">
+        <span class="page-title">{% block page_title %}Dashboard{% endblock %}</span>
+        <div class="topbar-actions">
+            <a href="#" class="btn-icon" title="Notificações"><i class="bi bi-bell"></i></a>
+            <a href="/admin/" class="btn-icon" title="Admin" {% if not user.is_staff %}style="display:none"{% endif %}>
+                <i class="bi bi-gear"></i>
+            </a>
+        </div>
+    </header>
+
+    {% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+        <div class="alert-fa {% if message.tags == 'error' %}alert-fa-error{% elif message.tags == 'success' %}alert-fa-success{% else %}alert-fa-info{% endif %}">
+            <i class="bi {% if message.tags == 'error' %}bi-exclamation-circle{% elif message.tags == 'success' %}bi-check-circle{% else %}bi-info-circle{% endif %}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="page-body">
+        {% block content %}{% endblock %}
+    </main>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

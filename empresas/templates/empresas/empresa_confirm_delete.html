@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Excluir Empresa{% endblock %}
+{% block page_title %}Excluir Empresa{% endblock %}
+
+{% block content %}
+<div style="max-width:500px;">
+    <div style="background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.3); border-radius:14px; padding:32px; text-align:center;">
+        <div style="font-size:48px; margin-bottom:16px;">⚠️</div>
+        <h3 style="font-size:16px; font-weight:700; color:#f87171; margin-bottom:8px;">Confirmar Exclusão</h3>
+        <p style="font-size:13px; color:var(--fa-text-muted); margin-bottom:6px;">
+            Você está prestes a excluir permanentemente a empresa:
+        </p>
+        <p style="font-size:15px; font-weight:700; color:var(--fa-text); margin-bottom:6px;">
+            {{ empresa.nome }}
+        </p>
+        {% if empresa.cnpj %}
+        <p style="font-size:12px; color:var(--fa-text-muted); font-family:monospace; margin-bottom:16px;">
+            CNPJ: {{ empresa.cnpj }}
+        </p>
+        {% endif %}
+        <p style="font-size:12px; color:#f87171; margin-bottom:24px;">
+            <strong>Esta ação não pode ser desfeita.</strong><br>
+            Todos os períodos e dados financeiros vinculados também serão excluídos.
+        </p>
+
+        <div class="d-flex gap-2 justify-content-center flex-wrap">
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" id="btn-confirmar-exclusao"
+                    style="background:#dc2626; border:none; color:white; border-radius:8px; font-size:13px; font-weight:600; padding:10px 22px; cursor:pointer;">
+                    <i class="bi bi-trash3 me-2"></i>Sim, Excluir
+                </button>
+            </form>
+            <a href="{% url 'empresas:detail' empresa.pk %}"
+               style="background:var(--fa-surface-2); border:1px solid var(--fa-border); color:var(--fa-text-muted); border-radius:8px; font-size:13px; font-weight:600; padding:10px 22px; text-decoration:none; display:inline-flex; align-items:center;">
+                <i class="bi bi-x-circle me-2"></i>Cancelar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

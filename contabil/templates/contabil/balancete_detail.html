@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Balancete — {{ periodo }}{% endblock %}
+{% block page_title %}Balancete · {{ periodo }}{% endblock %}
+{% block content %}
+<div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:12px; overflow:hidden;">
+    <div style="padding:16px 20px; border-bottom:1px solid var(--fa-border); display:flex; justify-content:space-between; align-items:center;">
+        <div>
+            <span style="font-size:14px; font-weight:600; color:var(--fa-text);">{{ periodo }}</span>
+            <span style="margin-left:10px; font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px;
+                {% if periodo.status == 'processado' %}background:rgba(63,185,80,.12);color:#3fb950;{% elif periodo.status == 'erro' %}background:rgba(248,81,73,.12);color:#f85149;{% else %}background:rgba(139,148,158,.1);color:#8b949e;{% endif %}">
+                {{ periodo.get_status_display }}
+            </span>
+        </div>
+        <div style="display:flex; gap:8px;">
+            <a href="{% url 'analises:dre' periodo.pk %}" class="btn btn-sm" style="background:var(--fa-surface-2); border:1px solid var(--fa-border); color:var(--fa-text); border-radius:6px; font-size:12px;">DRE</a>
+            <a href="{% url 'analises:indicadores' periodo.pk %}" class="btn btn-sm" style="background:var(--fa-surface-2); border:1px solid var(--fa-border); color:var(--fa-text); border-radius:6px; font-size:12px;">KPIs</a>
+            <a href="{% url 'risco:score' periodo.pk %}" class="btn btn-sm" style="background:var(--fa-surface-2); border:1px solid var(--fa-border); color:var(--fa-text); border-radius:6px; font-size:12px;">Risco</a>
+        </div>
+    </div>
+    {% if linhas %}
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr style="border-bottom:1px solid var(--fa-border);">
+                    <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:left;">Código</th>
+                    <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:left;">Conta</th>
+                    <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:right;">Saldo Ant.</th>
+                    <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:right;">Débito</th>
+                    <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:right;">Crédito</th>
+                    <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:right;">Saldo Atual</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for l in linhas %}
+                <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+                    <td style="padding:9px 16px; font-size:12px; color:var(--fa-text-muted); font-family:monospace;">{{ l.conta.codigo }}</td>
+                    <td style="padding:9px 16px; font-size:13px; color:var(--fa-text);">{{ l.conta.descricao }}</td>
+                    <td style="padding:9px 16px; font-size:12px; color:var(--fa-text-muted); text-align:right;">R$ {{ l.saldo_anterior|floatformat:2 }}</td>
+                    <td style="padding:9px 16px; font-size:12px; color:#3fb950; text-align:right;">R$ {{ l.debito|floatformat:2 }}</td>
+                    <td style="padding:9px 16px; font-size:12px; color:#f85149; text-align:right;">R$ {{ l.credito|floatformat:2 }}</td>
+                    <td style="padding:9px 16px; font-size:13px; font-weight:600; color:var(--fa-text); text-align:right;">R$ {{ l.saldo_atual|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="padding:48px; text-align:center; color:var(--fa-text-muted);">
+        <div style="font-size:36px; margin-bottom:12px;">📊</div>
+        <div>Nenhuma linha de balancete processada ainda.</div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

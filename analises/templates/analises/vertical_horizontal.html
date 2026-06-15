@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}V&H — {{ periodo }}{% endblock %}
+{% block page_title %}Análise Vertical & Horizontal · {{ periodo }}{% endblock %}
+{% block content %}
+<div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:12px; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr style="border-bottom:1px solid var(--fa-border);">
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted);">Código</th>
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted);">Conta</th>
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:right;">Valor Atual</th>
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:right;">AV%</th>
+                <th style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:right;">AH%</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in analises %}
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+                <td style="padding:9px 16px; font-size:12px; color:var(--fa-text-muted); font-family:monospace;">{{ a.conta_codigo }}</td>
+                <td style="padding:9px 16px; font-size:13px; color:var(--fa-text);">{{ a.conta_descricao }}</td>
+                <td style="padding:9px 16px; font-size:12px; color:var(--fa-text); text-align:right;">R$ {{ a.valor_atual|floatformat:2 }}</td>
+                <td style="padding:9px 16px; font-size:12px; color:#58a6ff; text-align:right;">{{ a.av_percentual|floatformat:2 }}%</td>
+                <td style="padding:9px 16px; font-size:12px; text-align:right; color:{% if a.ah_percentual and a.ah_percentual >= 0 %}#3fb950{% else %}#f85149{% endif %};">
+                    {% if a.ah_percentual %}{{ a.ah_percentual|floatformat:2 }}%{% else %}—{% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" style="padding:48px; text-align:center; color:var(--fa-text-muted);">Análise V&H não disponível para este período.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

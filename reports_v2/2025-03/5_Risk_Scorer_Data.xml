@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FinAgentRiskReport>
+    <Period>2025-03</Period>
+    <Rating>
+        <CalculatedScore>400</CalculatedScore>
+        <RiskClass>CCC</RiskClass>
+        <Category>Alto Risco (Speculative Grade)</Category>
+    </Rating>
+    <Covenants>
+        <LeverageCovenant>
+            <Metric>DividaLiquida_sobre_EBITDA</Metric>
+            <Value>-0.899</Value>
+            <EarnedPoints>300</EarnedPoints>
+        </LeverageCovenant>
+        <InterestCoverageCovenant>
+            <Metric>ICJ_Calculated</Metric>
+            <Value>-60.771</Value>
+            <EarnedPoints>0</EarnedPoints>
+        </InterestCoverageCovenant>
+        <LiquidityCovenant>
+            <Metric>Liquidez_Seca</Metric>
+            <Value>0.281</Value>
+            <EarnedPoints>0</EarnedPoints>
+        </LiquidityCovenant>
+        <ProfitabilityCovenant>
+            <Metric>ROE_Mensal</Metric>
+            <Value>0.0063</Value>
+            <EarnedPoints>100</EarnedPoints>
+        </ProfitabilityCovenant>
+    </Covenants>
+    <Alerts>
+        <Alert>Cobertura de Juros insuficiente. A operação tem risco elevado de default direto da sua dívida onera mensal (ICJ < 1.5).</Alert>
+        <Alert>Tensão de Caixa Seco Grave! A empresa possui menos de R$ 0,90 de giro conversível na mesa para cada R$ 1,00 devido no curto prazo.</Alert>
+    </Alerts>
+</FinAgentRiskReport>

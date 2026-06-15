@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Empresas{% endblock %}
+{% block page_title %}Empresas Cadastradas{% endblock %}
+
+{% block extra_head %}
+<style>
+.empresa-card {
+    background: var(--fa-surface);
+    border: 1px solid var(--fa-border);
+    border-radius: 12px; padding: 20px 22px;
+    transition: border-color 0.2s, transform 0.15s;
+    text-decoration: none; display: block; position: relative;
+}
+.empresa-card:hover { border-color: var(--fa-primary); transform: translateY(-2px); }
+.empresa-nome { font-size: 15px; font-weight: 600; color: var(--fa-text); margin-bottom: 4px; }
+.empresa-cnpj { font-size: 12px; color: var(--fa-text-muted); font-family: monospace; }
+.badge-regime {
+    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px;
+    background: rgba(59,130,246,0.12); color: #3b82f6; border: 1px solid rgba(59,130,246,0.2);
+}
+.card-actions {
+    display: flex; gap: 6px; margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid var(--fa-border);
+}
+.btn-action {
+    font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 6px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+    transition: opacity .2s;
+}
+.btn-action:hover { opacity: 0.8; }
+.btn-edit { background:rgba(59,130,246,.12); color:#3b82f6; border:1px solid rgba(59,130,246,.2); }
+.btn-del  { background:rgba(239,68,68,.10); color:#f87171; border:1px solid rgba(239,68,68,.2); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 style="font-size:14px; font-weight:600; color:var(--fa-text-muted); text-transform:uppercase; letter-spacing:.06em; margin:0;">
+        {{ empresas.count }} empresa(s)
+    </h2>
+    <a href="{% url 'empresas:create' %}" class="btn btn-primary" style="border-radius:8px; font-size:13px; font-weight:600; padding:8px 16px;">
+        <i class="bi bi-building-add me-2"></i>Nova Empresa
+    </a>
+</div>
+
+{% if messages %}
+    {% for msg in messages %}
+    <div style="padding:10px 14px; border-radius:8px; margin-bottom:16px;
+        {% if msg.tags == 'error' %}background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:#f87171;
+        {% else %}background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.3); color:#4ade80;{% endif %}
+        font-size:13px;">
+        {{ msg }}
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% if empresas %}
+<div class="row g-3">
+    {% for e in empresas %}
+    <div class="col-sm-6 col-lg-4">
+        <div class="empresa-card">
+            <!-- Card body (link para detalhe) -->
+            <a href="{% url 'empresas:detail' e.pk %}" style="text-decoration:none; display:block;">
+                <div class="d-flex align-items-start justify-content-between mb-2">
+                    <div style="width:36px;height:36px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px;flex-shrink:0;">
+                        {{ e.nome|first|upper }}
+                    </div>
+                    {% if e.regime_tributario %}
+                    <span class="badge-regime">{{ e.get_regime_tributario_display }}</span>
+                    {% endif %}
+                </div>
+                <div class="empresa-nome mt-2">{{ e.nome }}</div>
+                {% if e.cnpj %}<div class="empresa-cnpj">{{ e.cnpj }}</div>{% endif %}
+                {% if e.setor %}<div style="font-size:12px;color:var(--fa-text-muted);margin-top:4px;">{{ e.setor }}</div>{% endif %}
+                <div style="margin-top:10px; font-size:11px; color:var(--fa-text-muted);">
+                    <i class="bi bi-calendar3 me-1"></i>{{ e.total_periodos }} período(s) ·
+                    {% if e.ativo %}<span style="color:var(--fa-success);">● Ativa</span>{% else %}<span style="color:var(--fa-danger);">● Inativa</span>{% endif %}
+                </div>
+            </a>
+            <!-- Ações CRUD -->
+            <div class="card-actions">
+                <a href="{% url 'empresas:update' e.pk %}" class="btn-action btn-edit" id="btn-editar-{{ e.pk }}">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
+                <a href="{% url 'empresas:delete' e.pk %}" class="btn-action btn-del" id="btn-excluir-{{ e.pk }}">
+                    <i class="bi bi-trash3"></i> Excluir
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div style="text-align:center; padding:60px 20px; color:var(--fa-text-muted);">
+    <div style="font-size:48px; margin-bottom:16px;">🏢</div>
+    <div style="font-size:15px; font-weight:600; margin-bottom:8px; color:var(--fa-text);">Nenhuma empresa cadastrada</div>
+    <div style="font-size:13px; margin-bottom:24px;">Cadastre a primeira empresa para começar a análise financeira.</div>
+    <a href="{% url 'empresas:create' %}" class="btn btn-primary" style="border-radius:8px; font-size:13px; font-weight:600;">
+        <i class="bi bi-building-add me-2"></i>Cadastrar Empresa
+    </a>
+</div>
+{% endif %}
+{% endblock %}

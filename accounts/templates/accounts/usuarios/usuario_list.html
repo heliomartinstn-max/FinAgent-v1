@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block title %}Gestão de Usuários{% endblock %}
+{% block page_title %}Gestão de Usuários{% endblock %}
+
+{% block extra_head %}
+<style>
+.nivel-badge {
+    font-size:10px; font-weight:700; padding:2px 9px; border-radius:20px;
+    text-transform:uppercase; letter-spacing:.04em;
+}
+.nivel-ADMIN    { background:rgba(248,81,73,.12);  color:#f85149; border:1px solid rgba(248,81,73,.25); }
+.nivel-ANALISTA { background:rgba(59,130,246,.12); color:#3b82f6; border:1px solid rgba(59,130,246,.25); }
+.nivel-GESTOR   { background:rgba(63,185,80,.12);  color:#3fb950; border:1px solid rgba(63,185,80,.25); }
+.nivel-default  { background:rgba(139,148,158,.1); color:#8b949e; border:1px solid rgba(139,148,158,.2);}
+.status-dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+.avatar-sm {
+    width:32px; height:32px; border-radius:50%;
+    background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+    display:flex; align-items:center; justify-content:center;
+    color:white; font-size:13px; font-weight:700; flex-shrink:0;
+}
+.table-fa { width:100%; border-collapse:collapse; }
+.table-fa th { padding:10px 16px; font-size:11px; font-weight:600; color:var(--fa-text-muted); text-align:left; border-bottom:1px solid var(--fa-border); }
+.table-fa td { padding:12px 16px; font-size:13px; color:var(--fa-text); border-bottom:1px solid rgba(255,255,255,.04); vertical-align:middle; }
+.table-fa tr:last-child td { border-bottom:none; }
+.table-fa tr:hover td { background:rgba(255,255,255,.02); }
+.btn-sm-action {
+    font-size:11px; font-weight:600; padding:4px 10px; border-radius:6px;
+    text-decoration:none; display:inline-flex; align-items:center; gap:4px; transition:opacity .2s;
+}
+.btn-sm-action:hover { opacity:.8; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Cabeçalho -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <div style="font-size:13px; color:var(--fa-text-muted);">
+            <i class="bi bi-shield-lock me-1" style="color:var(--fa-primary);"></i>
+            Área restrita — somente administradores
+        </div>
+    </div>
+    <a href="{% url 'accounts:usuario_create' %}" class="btn btn-primary" id="btn-novo-usuario"
+       style="border-radius:8px; font-size:13px; font-weight:600; padding:8px 16px;">
+        <i class="bi bi-person-plus-fill me-2"></i>Novo Usuário
+    </a>
+</div>
+
+<!-- Cards de resumo -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-4">
+        <div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:10px; padding:16px 20px;">
+            <div style="font-size:22px; font-weight:700; color:var(--fa-text);">{{ usuarios.count }}</div>
+            <div style="font-size:12px; color:var(--fa-text-muted); margin-top:2px;">Total de Usuários</div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:10px; padding:16px 20px;">
+            <div style="font-size:22px; font-weight:700; color:#3fb950;">{{ usuarios|length }}</div>
+            <div style="font-size:12px; color:var(--fa-text-muted); margin-top:2px;">Usuários Ativos</div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:10px; padding:16px 20px;">
+            <div style="font-size:22px; font-weight:700; color:#f85149;">{{ niveis.count }}</div>
+            <div style="font-size:12px; color:var(--fa-text-muted); margin-top:2px;">Níveis de Acesso</div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabela de usuários -->
+<div style="background:var(--fa-surface); border:1px solid var(--fa-border); border-radius:12px; overflow:hidden;">
+    <table class="table-fa">
+        <thead>
+            <tr>
+                <th>Usuário</th>
+                <th>E-mail</th>
+                <th>Nível de Acesso</th>
+                <th>Status</th>
+                <th>Admin</th>
+                <th>Desde</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+            <tr>
+                <!-- Avatar + Nome -->
+                <td>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div class="avatar-sm">{{ u.nome_completo|first|upper|default:u.email|first|upper }}</div>
+                        <div>
+                            <div style="font-weight:600; color:var(--fa-text);">{{ u.nome_completo|default:"—" }}</div>
+                            {% if u == request.user %}
+                            <div style="font-size:10px; color:var(--fa-primary);">← você</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </td>
+
+                <!-- E-mail -->
+                <td style="color:var(--fa-text-muted); font-family:monospace; font-size:12px;">{{ u.email }}</td>
+
+                <!-- Nível -->
+                <td>
+                    {% if u.nivel_acesso %}
+                    <span class="nivel-badge nivel-{{ u.nivel_acesso.nome }}">
+                        {{ u.nivel_acesso.get_nome_display }}
+                    </span>
+                    {% else %}
+                    <span class="nivel-badge nivel-default">Sem nível</span>
+                    {% endif %}
+                </td>
+
+                <!-- Status (ativo/inativo) -->
+                <td>
+                    {% if u.is_active %}
+                    <span style="display:flex; align-items:center; gap:6px; font-size:12px; color:#3fb950;">
+                        <span class="status-dot" style="background:#3fb950;"></span> Ativo
+                    </span>
+                    {% else %}
+                    <span style="display:flex; align-items:center; gap:6px; font-size:12px; color:#f85149;">
+                        <span class="status-dot" style="background:#f85149;"></span> Inativo
+                    </span>
+                    {% endif %}
+                </td>
+
+                <!-- Staff -->
+                <td>
+                    {% if u.is_staff or u.is_superuser %}
+                    <i class="bi bi-check-circle-fill" style="color:#3fb950; font-size:16px;"></i>
+                    {% else %}
+                    <i class="bi bi-dash-circle" style="color:rgba(139,148,158,.4); font-size:16px;"></i>
+                    {% endif %}
+                </td>
+
+                <!-- Data de cadastro -->
+                <td style="font-size:12px; color:var(--fa-text-muted);">{{ u.date_joined|date:"d/m/Y" }}</td>
+
+                <!-- Ações -->
+                <td>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <a href="{% url 'accounts:usuario_edit' u.pk %}"
+                           class="btn-sm-action" id="btn-editar-usuario-{{ u.pk }}"
+                           style="background:rgba(59,130,246,.12); color:#3b82f6; border:1px solid rgba(59,130,246,.2);">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+
+                        {% if u != request.user %}
+                        <!-- Toggle Ativo/Inativo -->
+                        <form method="POST" action="{% url 'accounts:usuario_toggle' u.pk %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" id="btn-toggle-{{ u.pk }}"
+                                    class="btn-sm-action"
+                                    style="border:none; cursor:pointer;
+                                    {% if u.is_active %}background:rgba(210,153,34,.12); color:#d29922; border:1px solid rgba(210,153,34,.2);
+                                    {% else %}background:rgba(63,185,80,.12); color:#3fb950; border:1px solid rgba(63,185,80,.2);{% endif %}">
+                                {% if u.is_active %}<i class="bi bi-pause-circle"></i> Desativar
+                                {% else %}<i class="bi bi-play-circle"></i> Ativar{% endif %}
+                            </button>
+                        </form>
+
+                        <a href="{% url 'accounts:usuario_delete' u.pk %}"
+                           class="btn-sm-action" id="btn-excluir-usuario-{{ u.pk }}"
+                           style="background:rgba(248,81,73,.10); color:#f85149; border:1px solid rgba(248,81,73,.2);">
+                            <i class="bi bi-trash3"></i> Excluir
+                        </a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="padding:48px; text-align:center; color:var(--fa-text-muted);">
+                    <div style="font-size:32px; margin-bottom:12px;">👤</div>
+                    Nenhum usuário cadastrado ainda.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+# ─── Framework Web ───────────────────────────────────────────
+Django==6.0.5
+asgiref==3.11.1
+sqlparse==0.5.5
+
+# ─── Processamento de Dados ──────────────────────────────────
+pandas==3.0.2
+numpy==2.4.4
+openpyxl==3.1.5           # Leitura de arquivos Excel (.xlsx)
+et_xmlfile==2.0.0
+narwhals==2.21.0
+python-dateutil==2.9.0.post0
+six==1.17.0
+packaging==26.2
+tzdata==2026.2
+
+# ─── Visualização (Gráficos Plotly) ──────────────────────────
+plotly==6.7.0
+
+# ─── IA / LLM (instalar quando tiver a chave da API) ─────────
+# anthropic>=0.40           # SDK Claude API (Risk Scorer + Chat)
+
+# ─── Machine Learning / Forecast (opcional) ──────────────────
+# prophet>=1.1              # Projeções de séries temporais
+
+# ─── Produção (usar no deploy, não em desenvolvimento) ────────
+# gunicorn>=22.0            # Servidor WSGI para produção
+# whitenoise>=6.7           # Serve static files em produção
+# psycopg2-binary>=2.9      # Driver PostgreSQL (substituir SQLite)
+
+# ─── Tasks em Background (opcional, adicionar depois) ─────────
+# celery>=5.4
+# redis>=5.0
+
+# ─── Utilitários ─────────────────────────────────────────────
+# python-dotenv>=1.0        # Carregar variáveis de ambiente do .env
+
+# ─── Dev / Testes ────────────────────────────────────────────
+# pytest-django>=4.8
+# django-debug-toolbar>=4.4
