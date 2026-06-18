@@ -33,6 +33,8 @@ urlpatterns = [
 
     # Chat: /chat/, /api/chat/
     path('', include('chat.urls')),
+
+    path('api/', include('api.urls')),
 ]
 
 # Serve arquivos de mídia em desenvolvimento

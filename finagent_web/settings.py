@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'risco',
     'forecast',
     'chat',
+    'api',
 ]
 
 # ── Autenticação ──────────────────────────────────────────────

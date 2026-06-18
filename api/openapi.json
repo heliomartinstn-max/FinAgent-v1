@@ -1,0 +1,271 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "FinAgent API",
+        "description": "API de Inteligência Artificial para análise financeira corporativa. Fornece endpoints de análise de risco de crédito e previsão de tendências com Matriz SWOT utilizando modelos de IA avançados.\n\n## Autenticação\nTodos os endpoints requerem um token de acesso Bearer. Crie seu token no painel administrativo do FinAgent.",
+        "version": "1.0.0",
+        "contact": {
+            "name": "FinAgent TCC",
+            "url": "http://127.0.0.1:8000"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api",
+            "description": "Servidor de desenvolvimento local"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "Token",
+                "description": "Insira aqui o token de acesso gerado no painel Admin do FinAgent."
+            }
+        }
+    },
+    "security": [
+        {
+            "BearerAuth": []
+        }
+    ],
+    "paths": {
+        "/v1/risk/analyze/": {
+            "post": {
+                "summary": "Análise de Risco de Crédito com IA",
+                "description": "Recebe os indicadores financeiros de uma empresa e utiliza Inteligência Artificial para classificar o risco de crédito, calcular a probabilidade de inadimplência e emitir uma análise completa com recomendação.",
+                "operationId": "analyzeRisk",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "empresa_nome",
+                                    "faturamento_anual",
+                                    "endividamento_total",
+                                    "liquidez_corrente",
+                                    "rentabilidade_pl"
+                                ],
+                                "properties": {
+                                    "empresa_nome": {
+                                        "type": "string",
+                                        "example": "Indústria Alfa Ltda.",
+                                        "description": "Nome completo da empresa a ser analisada."
+                                    },
+                                    "faturamento_anual": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 5200000.00,
+                                        "description": "Faturamento bruto anual em reais (R$). Deve ser >= 0."
+                                    },
+                                    "endividamento_total": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1800000.00,
+                                        "description": "Soma de todas as dívidas (curto e longo prazo) em reais (R$). Deve ser >= 0."
+                                    },
+                                    "liquidez_corrente": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1.65,
+                                        "description": "Índice de liquidez corrente (Ativo Circulante / Passivo Circulante). Deve ser >= 0. Valores abaixo de 1.0 indicam insolvência técnica."
+                                    },
+                                    "rentabilidade_pl": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 12.5,
+                                        "description": "Rentabilidade sobre o Patrimônio Líquido (ROE) em porcentagem (%). Pode ser negativo."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Análise de risco processada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "classificacao": {
+                                            "type": "string",
+                                            "enum": [
+                                                "excelente",
+                                                "boa",
+                                                "atencao",
+                                                "risco",
+                                                "critico"
+                                            ],
+                                            "example": "boa"
+                                        },
+                                        "probabilidade_inadimplencia": {
+                                            "type": "number",
+                                            "example": 18.5,
+                                            "description": "Probabilidade estimada de inadimplência (0 a 100)."
+                                        },
+                                        "recomendacao": {
+                                            "type": "string",
+                                            "example": "A empresa Indústria Alfa Ltda. possui boa estabilidade operacional..."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou campos obrigatórios ausentes.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string"
+                                        },
+                                        "campos_invalidos": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token de autenticação ausente ou inválido."
+                    },
+                    "500": {
+                        "description": "Erro interno ao processar a análise."
+                    }
+                }
+            }
+        },
+        "/v1/forecast/predict/": {
+            "post": {
+                "summary": "Previsão de Tendências Financeiras com Matriz SWOT",
+                "description": "Recebe uma série histórica de receitas mensais e projeta os valores futuros utilizando regressão linear. A Inteligência Artificial gera uma análise SWOT completa e um plano de ação personalizado com base na tendência identificada.",
+                "operationId": "forecastTrend",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "empresa_nome",
+                                    "historico_receitas"
+                                ],
+                                "properties": {
+                                    "empresa_nome": {
+                                        "type": "string",
+                                        "example": "Comércio Beta S.A.",
+                                        "description": "Nome completo da empresa."
+                                    },
+                                    "historico_receitas": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        },
+                                        "minItems": 3,
+                                        "example": [
+                                            120000,
+                                            135000,
+                                            128000,
+                                            145000,
+                                            160000
+                                        ],
+                                        "description": "Lista com as receitas mensais históricas em reais. Mínimo de 3 períodos."
+                                    },
+                                    "meses_projecao": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 12,
+                                        "default": 3,
+                                        "example": 6,
+                                        "description": "Quantidade de meses futuros a projetar (entre 1 e 12)."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Projeção e análise SWOT geradas com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "analise_tendencia": {
+                                            "type": "string"
+                                        },
+                                        "valores_projetados": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            },
+                                            "example": [
+                                                172000.50,
+                                                183000.00,
+                                                194500.75
+                                            ]
+                                        },
+                                        "swot": {
+                                            "type": "object",
+                                            "properties": {
+                                                "forcas": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "fraquezas": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "oportunidades": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "ameacas": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "plano_acao": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou campos obrigatórios ausentes."
+                    },
+                    "401": {
+                        "description": "Token de autenticação ausente ou inválido."
+                    },
+                    "500": {
+                        "description": "Erro interno ao processar a previsão."
+                    }
+                }
+            }
+        }
+    }
+}
