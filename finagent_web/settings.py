@@ -10,22 +10,39 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# ── Carrega variáveis de ambiente do arquivo .env (se existir) ──────────────
+try:
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR / '.env')
+except ImportError:
+    pass  # python-dotenv não instalado — use variáveis de ambiente do sistema
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@wp*k0j&0(g+ivl&im_@%(mc^^vay-gk7l(ynb5le34+(8_o&c'
+# A chave é lida do arquivo .env (variável SECRET_KEY). Nunca deixe hardcoded!
+_SECRET_KEY = os.environ.get('SECRET_KEY')
+if not _SECRET_KEY:
+    raise ValueError(
+        "A variável de ambiente SECRET_KEY não está definida. "
+        "Crie o arquivo .env a partir do .env.example e configure a chave."
+    )
+SECRET_KEY = _SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = []
+# Em produção, adicione os domínios reais aqui via variável ALLOWED_HOSTS
+_allowed = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost')
+ALLOWED_HOSTS = [h.strip() for h in _allowed.split(',') if h.strip()]
 
 
 # Application definition

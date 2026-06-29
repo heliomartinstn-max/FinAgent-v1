@@ -33,7 +33,7 @@ plotly==6.7.0
 # redis>=5.0
 
 # ─── Utilitários ─────────────────────────────────────────────
-# python-dotenv>=1.0        # Carregar variáveis de ambiente do .env
+python-dotenv>=1.0         # Carregar variáveis de ambiente do .env
 
 # ─── Dev / Testes ────────────────────────────────────────────
 # pytest-django>=4.8
